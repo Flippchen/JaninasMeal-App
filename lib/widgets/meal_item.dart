@@ -73,7 +73,7 @@ class MealItem extends StatelessWidget {
   String get affordabilityText {
     switch (affordability) {
       case Affordability.affordable:
-        return 'Bezahlbar';
+        return 'Günstig';
         // ignore: dead_code
         break;
       case Affordability.pricey:
@@ -81,11 +81,11 @@ class MealItem extends StatelessWidget {
         // ignore: dead_code
         break;
       case Affordability.luxurious:
-        return 'Kostspielig';
+        return 'Luxuriös';
         // ignore: dead_code
         break;
       default:
-        return 'Unknown';
+        return 'Unbekannt';
     }
   }
 
@@ -153,7 +153,7 @@ class MealItem extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      Icon(Icons.work),
+                      Icon(Icons.people),
                       SizedBox(
                         width: 6,
                       ),

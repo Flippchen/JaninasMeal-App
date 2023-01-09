@@ -73,11 +73,10 @@ class MealDetailScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('${selectedMeal.title}'),
+        title: Text(selectedMeal.title),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            print(callback == null);
             if (callback != null) {
               callback();
             }
@@ -88,7 +87,7 @@ class MealDetailScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Container(
+            SizedBox(
               height: 300,
               width: double.infinity,
               child: Image.network(
@@ -96,85 +95,150 @@ class MealDetailScreen extends StatelessWidget {
                 fit: BoxFit.cover,
               ),
             ),
-            buildSectionTitle('Zutaten', context),
-            buildContainer(
-              ListView.builder(
-                itemCount: selectedMeal.ingredients.length,
-                itemBuilder: (context, index) => Card(
-                  color: Theme.of(context).colorScheme.secondary,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 5,
-                      vertical: 10,
-                    ),
-                    child: Text(
-                      selectedMeal.ingredients[index],
-                      style: GoogleFonts.lato(
-                          textStyle: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 16,
-                              fontWeight: FontWeight.normal)),
-                    ),
+            Container(
+              color: const Color(0x426ec539),
+              height: 40,
+              margin: const EdgeInsets.symmetric(vertical: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Row(
+                    children: [
+                      const Icon(Icons.schedule),
+                      const SizedBox(
+                        width: 7,
+                      ),
+                      Text('${selectedMeal.duration} min',
+                          style: GoogleFonts.roboto(
+                              fontSize: 17, fontWeight: FontWeight.w500)),
+                    ],
                   ),
-                ),
+                  Row(
+                    children: [
+                      const Icon(Icons.people),
+                      const SizedBox(
+                        width: 7,
+                      ),
+                      Text(getMealComplexity(selectedMeal.complexity),
+                          style: GoogleFonts.roboto(
+                              fontSize: 17, fontWeight: FontWeight.w500)),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      const Icon(Icons.attach_money),
+                      const SizedBox(
+                        width: 7,
+                      ),
+                      Text(getMealAffordability(selectedMeal.affordability),
+                          style: GoogleFonts.roboto(
+                              fontSize: 17, fontWeight: FontWeight.w500)),
+                    ],
+                  ),
+                ],
               ),
             ),
+            buildSectionTitle('Zutaten', context),
+            selectedMeal.ingredients != []
+                ? buildContainer(
+                    ListView.builder(
+                      itemCount: selectedMeal.ingredients.length,
+                      itemBuilder: (context, index) => Card(
+                        color: Theme.of(context).colorScheme.secondary,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 5,
+                            vertical: 10,
+                          ),
+                          child: Text(
+                            selectedMeal.ingredients[index],
+                            style: GoogleFonts.lato(
+                                textStyle: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.normal)),
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                : buildContainer(
+                    height: 100,
+                    Text("Keine Zutaten vorhanden",
+                        style: GoogleFonts.roboto(
+                            fontSize: 25, fontWeight: FontWeight.w500))),
             buildSectionTitle('Schritte', context),
-            buildContainer(
-              ListView.builder(
-                itemCount: selectedMeal.steps.length,
-                itemBuilder: (context, index) => Column(
-                  children: [
-                    ListTile(
-                      leading: CircleAvatar(
-                        backgroundColor: Theme.of(context).primaryColor,
-                        child: Text(
-                          '${(index + 1)}.',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                      title: Text(
-                        selectedMeal.steps[index],
-                        style: GoogleFonts.lato(
-                            textStyle: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 16,
-                                fontWeight: FontWeight.normal)),
+            selectedMeal.steps != []
+                ? buildContainer(
+                    ListView.builder(
+                      itemCount: selectedMeal.steps.length,
+                      itemBuilder: (context, index) => Column(
+                        children: [
+                          ListTile(
+                            leading: CircleAvatar(
+                              backgroundColor: Theme.of(context).primaryColor,
+                              child: Text(
+                                '${(index + 1)}.',
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                            ),
+                            title: Text(
+                              selectedMeal.steps[index],
+                              style: GoogleFonts.lato(
+                                  textStyle: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.normal)),
+                            ),
+                          ),
+                          const Divider(),
+                        ],
                       ),
                     ),
-                    Divider(),
-                  ],
-                ),
-              ),
-            ),
+                  )
+                : buildContainer(
+                    height: 100,
+                    Text("Keine Schritte vorhanden",
+                        style: GoogleFonts.roboto(
+                            fontSize: 25, fontWeight: FontWeight.w500))),
             buildSectionTitle('Kategorien', context),
-            buildContainer(
-              height: 110,
-              ListView.builder(
-                itemCount: selectedMeal.categories.length,
-                itemBuilder: (context, index) => Column(
-                  children: [
-                    ListTile(
-                      leading: CircleAvatar(
-                        backgroundColor: Theme.of(context).primaryColor,
-                        child: Text(
-                          '${(index + 1)}.',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                      title: Text(
-                        selectedMeal.categories[index],
-                        style: GoogleFonts.lato(
-                            textStyle: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 16,
-                                fontWeight: FontWeight.normal)),
+            selectedMeal.categories != []
+                ? buildContainer(
+                    height: 130,
+                    ListView.builder(
+                      itemCount: selectedMeal.categories.length,
+                      itemBuilder: (context, index) => Column(
+                        children: [
+                          ListTile(
+                            leading: CircleAvatar(
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.secondary,
+                              child: Text(
+                                '${(index + 1)}.',
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                            ),
+                            title: Text(
+                              selectedMeal.categories[index],
+                              style: GoogleFonts.lato(
+                                  textStyle: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.normal)),
+                            ),
+                          ),
+                          const Divider(),
+                        ],
                       ),
                     ),
-                    Divider(),
-                  ],
-                ),
-              ),
+                  )
+                : buildContainer(
+                    height: 100,
+                    Text("Keine Kategorien vorhanden",
+                        style: GoogleFonts.roboto(
+                            fontSize: 25, fontWeight: FontWeight.w500))),
+            const SizedBox(
+              height: 40,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -185,7 +249,8 @@ class MealDetailScreen extends StatelessWidget {
                   decoration: BoxDecoration(
                       border: Border.all(),
                       color: Colors.white,
-                      borderRadius: BorderRadius.all(Radius.circular(20))),
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(20))),
                   child: TextButton.icon(
                     onPressed: () => null,
                     icon: const Icon(
@@ -208,7 +273,8 @@ class MealDetailScreen extends StatelessWidget {
                   decoration: BoxDecoration(
                       border: Border.all(),
                       color: Colors.white,
-                      borderRadius: BorderRadius.all(Radius.circular(20))),
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(20))),
                   child: TextButton.icon(
                     onPressed: () {
                       Navigator.of(context).pop(mealId);
@@ -229,39 +295,6 @@ class MealDetailScreen extends StatelessWidget {
                 ),
               ],
             ),
-            Container(
-              margin: const EdgeInsets.all(10),
-              child: Text(
-                'Komplexität: ${getMealComplexity(selectedMeal.complexity)}',
-                style: GoogleFonts.lato(
-                    textStyle: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontWeight: FontWeight.normal)),
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.all(10),
-              child: Text(
-                'Dauer: ${selectedMeal.duration} min',
-                style: GoogleFonts.lato(
-                    textStyle: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontWeight: FontWeight.normal)),
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.all(10),
-              child: Text(
-                'Preislich: ${getMealAffordability(selectedMeal.affordability)}',
-                style: GoogleFonts.lato(
-                    textStyle: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontWeight: FontWeight.normal)),
-              ),
-            ),
             const SizedBox(
               height: 80,
             ),
@@ -270,7 +303,8 @@ class MealDetailScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).colorScheme.primary,
-        child: Icon(isFavourite(mealId) ? Icons.star : Icons.star_border),
+        child:
+            Icon(isFavourite(mealId) ? Icons.favorite : Icons.favorite_outline),
         onPressed: () => toggleFavourite(mealId),
       ),
     );

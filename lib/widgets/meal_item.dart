@@ -30,7 +30,6 @@ class MealItem extends StatelessWidget {
 
   Future<bool> selectMeal(BuildContext context) async {
     List<String> cat = await getMealCategories(categories);
-    print(cat.map((e) => e.toString()));
 
     Navigator.of(context).pushNamed(MealDetailScreen.routeName, arguments: [
       id,

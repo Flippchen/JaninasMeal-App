@@ -27,6 +27,7 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
                 steps: snapshot.data![index].steps,
                 ingredients: snapshot.data![index].ingredients,
                 categories: snapshot.data![index].categories,
+                callback: () => setState(() {}),
                 filters: {
                   "gluten": snapshot.data![index].isGlutenFree,
                   "lactose": snapshot.data![index].isLactoseFree,

@@ -77,10 +77,10 @@ class MealDetailScreen extends StatelessWidget {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
+            print(callback == null);
             if (callback != null) {
               callback();
             }
-            ;
             Navigator.of(context).pop();
           },
         ),

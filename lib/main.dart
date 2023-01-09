@@ -287,21 +287,21 @@ Future<List<Meal>> getAllFavouriteMeals() async {
   return mealsList;
 }
 
-// Close
+// Montag
 // TODO: Favourite Page soll wieder refresh bei wechsel?? kp warum wieder kaputt
 // TODO: Detail page vervollständigen
 
-
+// Dienstag-Freitag
 // TODO: Add Button soll funktionieren danach soll wieder alles refreshed werden mit showdialog wenn nicht erfolgreich
-
-
-
+// Samstag/Sonntag
+// TODO: Bilder als relativer Pfad
 
 // Not so close
 // TODO: Detail page: Delete Button/Edit Button Funktion hinzufügen
-// TODO: Bilder als relativer Pfad
+
 // Far
 // TODO: Verbindung zu Jagdwurst und zuckerbrot
+// TODO: Readme schreiben
 
 // Future
 // TODO: Rezeptgröße auf Personen anpassen

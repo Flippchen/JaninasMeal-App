@@ -63,17 +63,54 @@ class OnlineMealState extends State<OnlineMealScreen> {
       drawer: MainDrawer(),
       body: Column(
         children: [
-          SizedBox(
-            height: 20,
+          const SizedBox(
+            height: 300,
           ),
-          TextField(
-            controller: inputText,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'URL',
-              hintText: 'Füge eine URL ein',
+          Row(mainAxisAlignment: MainAxisAlignment.center,children: [Container(
+            decoration: BoxDecoration(
+              color: const Color(0xFF8bc34a),
+              border: Border.all(
+                color: Colors.black,
+                width: 3,
+              ),
+              borderRadius: BorderRadius.circular(10),
             ),
-          ),
+            width: 400,
+            height: 170,
+            child:Column(mainAxisAlignment:MainAxisAlignment.center, children: [const Text(
+              "Gib hier die URL von Zucker & Jagdwurst ein",
+              style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.normal),
+            ),const SizedBox(
+              height: 10,
+            ),Container(
+              height: 100,
+              width: 400,
+              padding: const EdgeInsets.all(20),
+              child: TextField(
+                controller: inputText,
+                decoration: const InputDecoration(
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black, width: 2.0),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black, width: 2.0),
+                  ),
+                  fillColor: Colors.white,
+                  filled: true,
+                  hintStyle: TextStyle(color: Colors.black,fontSize: 13),
+                  labelStyle: TextStyle(color: Colors.black, fontSize: 20),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
+
+                  ),
+                  labelText: 'URL',
+                  hintText: 'Bsp: https://www.zuckerundjagdwurst.de/rezepte/veganer-erdnussbutter-kuchen/',
+                ),
+              ),
+            ),], ),),],)
+
+
+
         ],
       ),
     );

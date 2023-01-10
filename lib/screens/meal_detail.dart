@@ -3,6 +3,9 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:google_fonts/google_fonts.dart';
 import 'package:meal_app_flutter/models/meal.dart';
 
+import '../alert_dialog.dart';
+import '../main.dart';
+
 class MealDetailScreen extends StatelessWidget {
   static const routeName = '/meal-deatil';
   final Function toggleFavourite, isFavourite;
@@ -274,8 +277,17 @@ class MealDetailScreen extends StatelessWidget {
                       borderRadius:
                           const BorderRadius.all(Radius.circular(20))),
                   child: TextButton.icon(
-                    onPressed: () {
-                      Navigator.of(context).pop(mealId);
+                    onPressed: () async {
+                      bool delete = await showDialog(
+                        context: context,
+                        builder: (BuildContext context) => AlertWidget(),
+                      );
+                      if (delete) {
+                          await deleteMeals(selectedMeal.id);
+                          await deleteMealsFavorites(selectedMeal.id);
+                          Navigator.pop(context, true);
+                          debugPrint("gelöscht");
+                      }
                     },
                     icon: Icon(
                       Icons.delete,
@@ -345,4 +357,5 @@ class MealDetailScreen extends StatelessWidget {
         return 'Unbekannt';
     }
   }
+
 }

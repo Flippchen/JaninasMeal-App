@@ -237,13 +237,13 @@ Future<bool> updateMeals(Meal meal) async {
   await writeMeals(encoded);
   return true;
 }
-//Future<bool> deleteMeals(String id) async {
-// var meals = await getAllMeals();
-//  meals.removeWhere((element) => element.id == id);
-// var encoded = meals.map((meal) => json.encode(meal.toJson()));
-//  await writeMeals(encoded);
-// return true;
-//}
+Future<bool> deleteMeals(String id) async {
+ var meals = await getAllMeals();
+  meals.removeWhere((element) => element.id == id);
+ var encoded = meals.map((meal) => json.encode(meal.toJson()));
+  await writeMeals(encoded);
+ return true;
+}
 
 /// Favorite Meals
 Future<File> get _localFileFav async {
@@ -286,9 +286,17 @@ Future<List<Meal>> getAllFavouriteMeals() async {
 
   return mealsList;
 }
+Future<bool> deleteMealsFavorites(String id) async {
+  var meals = await getAllFavouriteMeals();
+  meals.removeWhere((element) => element.id == id);
+  var encoded = meals.map((meal) => json.encode(meal.toJson()));
+  await writeMealsFav(encoded);
+  return true;
+}
+
 
 // Dienstag
-// TODO: Delete Button with Popupo
+// TODO: Turn categorie screnn and category meals screen into stateful widget
 // Dienstag-Freitag
 // TODO: Add Button soll funktionieren danach soll wieder alles refreshed werden mit showdialog wenn nicht erfolgreich
 // Samstag/Sonntag

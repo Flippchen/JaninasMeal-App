@@ -26,9 +26,11 @@ showAlertDialog(BuildContext context, String title, String content) {
     },
   );
 }
-class AlertWidget extends StatelessWidget {
 
-  AlertWidget({Key? key, }) : super(key: key);
+class AlertWidget extends StatelessWidget {
+  AlertWidget({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -52,4 +54,3 @@ class AlertWidget extends StatelessWidget {
     );
   }
 }
-

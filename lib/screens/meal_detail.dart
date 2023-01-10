@@ -283,10 +283,10 @@ class MealDetailScreen extends StatelessWidget {
                         builder: (BuildContext context) => AlertWidget(),
                       );
                       if (delete) {
-                          await deleteMeals(selectedMeal.id);
-                          await deleteMealsFavorites(selectedMeal.id);
-                          Navigator.pop(context, true);
-                          debugPrint("gelöscht");
+                        await deleteMeals(selectedMeal.id);
+                        await deleteMealsFavorites(selectedMeal.id);
+                        Navigator.pop(context, true);
+                        debugPrint("gelöscht");
                       }
                     },
                     icon: Icon(
@@ -357,5 +357,4 @@ class MealDetailScreen extends StatelessWidget {
         return 'Unbekannt';
     }
   }
-
 }

@@ -63,6 +63,7 @@ class _CategoryMealsScreenState extends State<CategoryMealsScreen> {
             steps: displayedMeals![index].steps,
             ingredients: displayedMeals![index].ingredients,
             categories: displayedMeals![index].categories,
+            //callback: () => setState(() {}),
             filters: {
               "gluten": displayedMeals![index].isGlutenFree,
               "lactose": displayedMeals![index].isLactoseFree,

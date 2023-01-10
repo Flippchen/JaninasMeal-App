@@ -7,6 +7,7 @@ import 'package:meal_app_flutter/models/meal.dart';
 import 'package:meal_app_flutter/screens/add_meal_screen.dart';
 import 'package:meal_app_flutter/screens/all_meals_screen.dart';
 import 'package:meal_app_flutter/screens/category_meals_screen.dart';
+import 'package:meal_app_flutter/screens/online_meal_screen.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:meal_app_flutter/screens/category_screen.dart';
 import 'package:meal_app_flutter/screens/filters_screen.dart';
@@ -155,6 +156,7 @@ class _MyAppState extends State<MyApp> {
             toggleFavourite: _toggledFavourite, isFavourite: _isMealFavourite),
         FiltersScreen.routeName: (context) =>
             FiltersScreen(_setFilters, _filters),
+        OnlineMealScreen.routeName: (context) => OnlineMealScreen(),
         AllMealsScreen.routeName: (context) => AllMealsScreen(_availableMeals),
         AddMealsScreen.routeName: (context) => AddMealsScreen(_availableMeals),
       },
@@ -237,12 +239,13 @@ Future<bool> updateMeals(Meal meal) async {
   await writeMeals(encoded);
   return true;
 }
+
 Future<bool> deleteMeals(String id) async {
- var meals = await getAllMeals();
+  var meals = await getAllMeals();
   meals.removeWhere((element) => element.id == id);
- var encoded = meals.map((meal) => json.encode(meal.toJson()));
+  var encoded = meals.map((meal) => json.encode(meal.toJson()));
   await writeMeals(encoded);
- return true;
+  return true;
 }
 
 /// Favorite Meals
@@ -286,6 +289,7 @@ Future<List<Meal>> getAllFavouriteMeals() async {
 
   return mealsList;
 }
+
 Future<bool> deleteMealsFavorites(String id) async {
   var meals = await getAllFavouriteMeals();
   meals.removeWhere((element) => element.id == id);
@@ -294,22 +298,19 @@ Future<bool> deleteMealsFavorites(String id) async {
   return true;
 }
 
-
 // Dienstag
-// TODO: Turn categorie screnn and category meals screen into stateful widget
+// TODO: Platzhalter wenn Kategorie leer ist
+// TODO: Turn categorie screnn and category meals screen into stateful widget --> refresh on delete meal // All Meal Screen Future Builder
 // Dienstag-Freitag
 // TODO: Add Button soll funktionieren danach soll wieder alles refreshed werden mit showdialog wenn nicht erfolgreich
 // Samstag/Sonntag
-// TODO: Bilder als relativer Pfad
+// TODO: Bilder als relativer Pfad und hinzufügen Button und Jagdwurst Parser anpassen usw
 
 // Not so close
-// TODO: ALl Meal Screen Future Builder?
 // TODO: Detail page: Edit Button Funktion hinzufügen
 
-// Far
-// TODO: Verbindung zu Jagdwurst und zuckerbrot
 // TODO: Readme schreiben
 // TODO: Mealitem durch Kommentar erweitern
 
 // Future
-// TODO: Rezeptgröße auf Personen anpassen
+// TODO: Rezeptgröße auf Personen anpassen und Angabe Rezept Anzahl Personen

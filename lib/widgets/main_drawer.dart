@@ -62,8 +62,15 @@ class MainDrawer extends StatelessWidget {
               Navigator.of(context).pushReplacementNamed('/');
             },
           ),
-          SizedBox(
-            height: 520,
+          buildListTile(
+            'Importieren',
+            Icons.import_export,
+            () {
+              Navigator.of(context).pushReplacementNamed('/online-meal');
+            },
+          ),
+          const SizedBox(
+            height: 470,
           ),
           buildListTile(
             'Filter',

@@ -14,6 +14,16 @@ const DUMMY_CATEGORIES = [
     color: Colors.lightBlue,
   ),
   Category(
+    id: 'c12',
+    title: 'Zucker & Jagdwurst',
+    color: Color(0xffc09333),
+  ),
+  Category(
+    id: 'c1',
+    title: 'Italienisch',
+    color: Colors.deepPurple,
+  ),
+  Category(
     id: 'c7',
     title: 'Frühstück',
     color: Colors.amber,
@@ -22,11 +32,6 @@ const DUMMY_CATEGORIES = [
     id: 'c10',
     title: 'Sommerlich',
     color: Colors.blueAccent,
-  ),
-  Category(
-    id: 'c1',
-    title: 'Italienisch',
-    color: Colors.deepPurple,
   ),
   Category(
     id: 'c3',

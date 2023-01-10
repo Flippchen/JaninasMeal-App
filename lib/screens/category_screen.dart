@@ -23,13 +23,12 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       children: DUMMY_CATEGORIES
           .map(
             (catData) => CategoryItem(
-          catData.title,
-          catData.id,
-          catData.color,
-        ),
-      )
+              catData.title,
+              catData.id,
+              catData.color,
+            ),
+          )
           .toList(),
     );
   }
 }
-

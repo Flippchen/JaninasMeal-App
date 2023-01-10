@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:meal_app_flutter/main.dart';
-import 'package:meal_app_flutter/models/meal.dart';
 import 'package:meal_app_flutter/widgets/meal_item.dart';
 
 class FavouritesScreen extends StatefulWidget {

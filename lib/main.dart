@@ -299,7 +299,6 @@ Future<bool> deleteMealsFavorites(String id) async {
 }
 
 // Dienstag
-// TODO: Platzhalter wenn Kategorie leer ist
 // TODO: Turn categorie screnn and category meals screen into stateful widget --> refresh on delete meal // All Meal Screen Future Builder
 // Dienstag-Freitag
 // TODO: Add Button soll funktionieren danach soll wieder alles refreshed werden mit showdialog wenn nicht erfolgreich

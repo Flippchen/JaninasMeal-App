@@ -48,32 +48,37 @@ class _CategoryMealsScreenState extends State<CategoryMealsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(categoryTitle!),
-      ),
-      body: ListView.builder(
-        itemBuilder: (ctx, index) {
-          return MealItem(
-            id: displayedMeals![index].id,
-            title: displayedMeals![index].title,
-            imageUrl: displayedMeals![index].imageUrl,
-            duration: displayedMeals![index].duration,
-            affordability: displayedMeals![index].affordability,
-            complexity: displayedMeals![index].complexity,
-            steps: displayedMeals![index].steps,
-            ingredients: displayedMeals![index].ingredients,
-            categories: displayedMeals![index].categories,
-            //callback: () => setState(() {}),
-            filters: {
-              "gluten": displayedMeals![index].isGlutenFree,
-              "lactose": displayedMeals![index].isLactoseFree,
-              "vegan": displayedMeals![index].isVegan,
-              "vegetarian": displayedMeals![index].isVegetarian
-            },
-          );
-        },
-        itemCount: displayedMeals!.length,
-      ),
-    );
+        appBar: AppBar(
+          title: Text(categoryTitle!),
+        ),
+        body: displayedMeals!.length > 0
+            ? ListView.builder(
+                itemBuilder: (ctx, index) {
+                  return MealItem(
+                    id: displayedMeals![index].id,
+                    title: displayedMeals![index].title,
+                    imageUrl: displayedMeals![index].imageUrl,
+                    duration: displayedMeals![index].duration,
+                    affordability: displayedMeals![index].affordability,
+                    complexity: displayedMeals![index].complexity,
+                    steps: displayedMeals![index].steps,
+                    ingredients: displayedMeals![index].ingredients,
+                    categories: displayedMeals![index].categories,
+                    //callback: () => setState(() {}),
+                    filters: {
+                      "gluten": displayedMeals![index].isGlutenFree,
+                      "lactose": displayedMeals![index].isLactoseFree,
+                      "vegan": displayedMeals![index].isVegan,
+                      "vegetarian": displayedMeals![index].isVegetarian
+                    },
+                  );
+                },
+                itemCount: displayedMeals!.length,
+              )
+            : const Scaffold(
+                body: Center(
+                  child: Text('Keine Mahlzeiten zu dieser Kategorie vorhanden'),
+                ),
+              ));
   }
 }

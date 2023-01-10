@@ -1,6 +1,7 @@
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:meal_app_flutter/dummy_data.dart';
 import 'package:meal_app_flutter/models/meal.dart';
 import 'package:meal_app_flutter/screens/meal_detail.dart';
@@ -100,13 +101,13 @@ class MealItem extends StatelessWidget {
           borderRadius: BorderRadius.circular(15),
         ),
         elevation: 4,
-        margin: EdgeInsets.all(10),
+        margin: const EdgeInsets.all(10),
         child: Column(
           children: [
             Stack(
               children: [
                 ClipRRect(
-                  borderRadius: BorderRadius.only(
+                  borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(15),
                     topRight: Radius.circular(15),
                   ),
@@ -126,7 +127,7 @@ class MealItem extends StatelessWidget {
                     padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
                     child: Text(
                       title,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 25,
                       ),
@@ -144,8 +145,8 @@ class MealItem extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Icon(Icons.schedule),
-                      SizedBox(
+                      const Icon(Icons.schedule),
+                      const SizedBox(
                         width: 6,
                       ),
                       Text('$duration min'),
@@ -153,8 +154,8 @@ class MealItem extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      Icon(Icons.people),
-                      SizedBox(
+                      const Icon(MdiIcons.weight),
+                      const SizedBox(
                         width: 6,
                       ),
                       Text(complexityText),
@@ -162,8 +163,8 @@ class MealItem extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      Icon(Icons.attach_money),
-                      SizedBox(
+                      const Icon(Icons.attach_money),
+                      const SizedBox(
                         width: 6,
                       ),
                       Text(affordabilityText),

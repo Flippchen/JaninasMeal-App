@@ -28,6 +28,7 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   shared_preferences: ^2.0.15
+  material_design_icons_flutter: 6.0.7096
   flutter:
     sdk: flutter
 

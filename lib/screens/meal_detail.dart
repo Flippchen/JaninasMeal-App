@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:meal_app_flutter/dummy_data.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:meal_app_flutter/main.dart';
 import 'package:meal_app_flutter/models/meal.dart';
 
 class MealDetailScreen extends StatelessWidget {
@@ -98,7 +97,6 @@ class MealDetailScreen extends StatelessWidget {
             Container(
               color: const Color(0x426ec539),
               height: 40,
-              margin: const EdgeInsets.symmetric(vertical: 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -115,7 +113,7 @@ class MealDetailScreen extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      const Icon(Icons.people),
+                      const Icon(MdiIcons.weight),
                       const SizedBox(
                         width: 7,
                       ),

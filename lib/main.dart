@@ -287,8 +287,9 @@ Future<List<Meal>> getAllFavouriteMeals() async {
   return mealsList;
 }
 
-// Dienstag-Freitag
+// Dienstag
 // TODO: Delete Button with Popupo
+// Dienstag-Freitag
 // TODO: Add Button soll funktionieren danach soll wieder alles refreshed werden mit showdialog wenn nicht erfolgreich
 // Samstag/Sonntag
 // TODO: Bilder als relativer Pfad

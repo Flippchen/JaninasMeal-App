@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:meal_app_flutter/widgets/category_item.dart';
 import 'package:meal_app_flutter/dummy_data.dart';
 
-class CategoriesScreen extends StatelessWidget {
+class CategoriesScreen extends StatefulWidget {
   const CategoriesScreen({Key? key}) : super(key: key);
 
+  @override
+  _CategoriesScreenState createState() => _CategoriesScreenState();
+}
+
+class _CategoriesScreenState extends State<CategoriesScreen> {
   @override
   Widget build(BuildContext context) {
     return GridView(
@@ -18,12 +23,13 @@ class CategoriesScreen extends StatelessWidget {
       children: DUMMY_CATEGORIES
           .map(
             (catData) => CategoryItem(
-              catData.title,
-              catData.id,
-              catData.color,
-            ),
-          )
+          catData.title,
+          catData.id,
+          catData.color,
+        ),
+      )
           .toList(),
     );
   }
 }
+

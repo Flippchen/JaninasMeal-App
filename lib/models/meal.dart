@@ -66,4 +66,25 @@ class Meal {
       isVegetarian: decode['isVegetarian'],
     );
   }
+
+  @override
+  String toString() {
+    return '''
+    Meal {
+      id: $id,
+      title: $title,
+      imageUrl: $imageUrl,
+      categories: $categories,
+      ingredients: $ingredients,
+      steps: $steps,
+      duration: $duration,
+      complexity: $complexity,
+      affordability: $affordability,
+      isGlutenFree: $isGlutenFree,
+      isLactoseFree: $isLactoseFree,
+      isVegan: $isVegan,
+      isVegetarian: $isVegetarian,
+    }
+    ''';
+  }
 }

@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
-
+import 'dart:math';
 import 'models/meal.dart';
 
 Future<Meal> getOnlineMeal(Uri url) async {
@@ -55,6 +55,7 @@ Future<Meal> getOnlineMeal(Uri url) async {
       final images = document
           .querySelectorAll("div.header-module--image--Sfehh picture img");
       imageString = images[0].attributes["data-src"].toString();
+      print(imageString);
     } catch (e) {
       imageString = "";
     }
@@ -70,12 +71,17 @@ Future<Meal> getOnlineMeal(Uri url) async {
     } catch (e) {
       time = 0;
     }
+    print(time.toString());
 
     //Recipe categorie
     final categories = ["c12"];
-
+    //Generate Meal
+    Random random = Random();
+    num randomNumber = random.nextInt(50000);
     final Meal meal = Meal(
-      id: "test",
+      id: imageString != ""
+          ? imageString.hashCode.toString()
+          : randomNumber.hashCode.toString(),
       title: title,
       imageUrl: imageString != ""
           ? imageString

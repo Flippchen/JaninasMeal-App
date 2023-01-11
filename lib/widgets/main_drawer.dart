@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meal_app_flutter/alert_dialog.dart';
 import 'package:meal_app_flutter/screens/filters_screen.dart';
 
 class MainDrawer extends StatelessWidget {
@@ -30,12 +31,18 @@ class MainDrawer extends StatelessWidget {
             padding: EdgeInsets.all(15),
             alignment: Alignment.centerLeft,
             color: Theme.of(context).accentColor,
-            child: Text(
-              'Erfinde dich neu!',
-              style: TextStyle(
-                  fontWeight: FontWeight.w900,
-                  fontSize: 30,
-                  color: Theme.of(context).primaryColor),
+            child: TextButton(
+              onLongPress: () {
+                showAlertDialog(context, "Ich liebe dich", "❤️");
+              },
+              onPressed: () {},
+              child: Text(
+                'Erfinde dich neu!',
+                style: TextStyle(
+                    fontWeight: FontWeight.w900,
+                    fontSize: 30,
+                    color: Theme.of(context).primaryColor),
+              ),
             ),
           ),
           SizedBox(

@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:meal_app_flutter/alert_dialog.dart';
 import 'package:meal_app_flutter/html_parser.dart';
+import 'package:meal_app_flutter/main.dart';
 import 'package:meal_app_flutter/widgets/main_drawer.dart';
 
 import '../models/meal.dart';
@@ -30,6 +33,12 @@ class OnlineMealState extends State<OnlineMealScreen> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.send),
         onPressed: () async {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            behavior: SnackBarBehavior.floating,
+            margin: EdgeInsets.fromLTRB(90, 0, 90, 30),
+            duration: Duration(milliseconds: 1500),
+            content: Text("Erstelle Rezept..."),
+          ));
           Uri url;
           try {
             url = Uri.parse(inputText.text);
@@ -38,9 +47,7 @@ class OnlineMealState extends State<OnlineMealScreen> {
               var meal = await getOnlineMeal(url);
               if (meal.id != "ERROR") {
                 print("meal erstellt");
-                // TODO: Push screen with information
-                //setState(() {
-                //// });
+                // TODO: setState. navigator push edit screeen
               } else {
                 showAlertDialog(context, "Fehler",
                     "Die Seite konnte nicht richtig geladen werden\nÜberprüfe deine Eingabe, deine Internetverbindung und versuche es erneut");

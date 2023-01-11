@@ -298,18 +298,19 @@ Future<bool> deleteMealsFavorites(String id) async {
   return true;
 }
 
-// Dienstag
-// TODO: Turn categorie screnn and category meals screen into stateful widget --> refresh on delete meal // All Meal Screen Future Builder
-// Dienstag-Freitag
-// TODO: Add Button soll funktionieren danach soll wieder alles refreshed werden mit showdialog wenn nicht erfolgreich
-// Samstag/Sonntag
+// Donnerstag-Freitag
+// TODO: Love Popup überarbeiten
+// TODO: Add Button fertig
+// TODO: Turn categorie screnn and category meals screen into stateful widget --> refresh on delete meal // All Meal Screen Future Builder // Categorie screen Future Builder // Refresh wenn Bei Meal Erstellung ein Step gelöscht wird
+
+// Samstag
+// TODO: Detail page: Edit Button Funktion hinzufügen
 // TODO: Bilder als relativer Pfad und hinzufügen Button und Jagdwurst Parser anpassen usw
 
-// Not so close
-// TODO: Detail page: Edit Button Funktion hinzufügen
-
+//Sonntag
 // TODO: Readme schreiben
-// TODO: Mealitem durch Kommentar erweitern
+// TODO: Startbild und Appbild --> Playestore
 
 // Future
 // TODO: Rezeptgröße auf Personen anpassen und Angabe Rezept Anzahl Personen
+// TODO: Mealitem durch Kommentar erweitern

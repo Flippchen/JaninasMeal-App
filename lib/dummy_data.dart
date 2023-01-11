@@ -5,12 +5,12 @@ import 'package:meal_app_flutter/models/meal.dart';
 const DUMMY_CATEGORIES = [
   Category(
     id: 'c2',
-    title: 'Schnell und einfach',
+    title: 'Schnell & einfach',
     color: Colors.deepOrange,
   ),
   Category(
     id: 'c5',
-    title: 'Leicht & Lieblich',
+    title: 'Leicht & lieblich',
     color: Colors.lightBlue,
   ),
   Category(
@@ -57,6 +57,11 @@ const DUMMY_CATEGORIES = [
     id: 'c9',
     title: 'Französisch',
     color: Colors.limeAccent,
+  ),
+  Category(
+    id: 'c13',
+    title: 'Experimentell',
+    color: Colors.pinkAccent,
   ),
 ];
 
@@ -127,7 +132,7 @@ const DUMMY_MEALS = [
     id: 'm3',
     categories: [
       'c2',
-      'c3',
+      'c12',
     ],
     title: 'Classic Hamburger',
     affordability: Affordability.pricey,
@@ -157,9 +162,7 @@ const DUMMY_MEALS = [
   ),
   Meal(
     id: 'm4',
-    categories: [
-      'c4',
-    ],
+    categories: ['c4', "c12"],
     title: 'Wiener Schnitzel',
     affordability: Affordability.luxurious,
     complexity: Complexity.challenging,
@@ -230,7 +233,7 @@ const DUMMY_MEALS = [
     id: 'm6',
     categories: [
       'c6',
-      'c10',
+      'c13',
     ],
     title: 'Delicious Orange Mousse',
     affordability: Affordability.affordable,

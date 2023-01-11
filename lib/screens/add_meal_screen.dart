@@ -50,7 +50,7 @@ class AddMealsState extends State<AddMealsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Füge ein Rezept hinzu'),
+        title: const Text('Neues Rezept'),
       ),
       floatingActionButton: FloatingActionButton(
         heroTag: "createMeal",
@@ -150,11 +150,11 @@ class AddMealsState extends State<AddMealsScreen> {
                 ),
               ),
               width: 400,
-              height: stepsText.length * 50.0 >= 250
+              height: (stepsText.length ) * 50.0 >= 250
                   ? 250
                   : stepsText.length * 50.0,
               margin: const EdgeInsets.all(10),
-              child: stepsText != []
+              child: stepsText.isNotEmpty
                   ? ListView.builder(
                       itemCount: stepsText.length,
                       itemBuilder: (context, index) => Column(
@@ -180,7 +180,7 @@ class AddMealsState extends State<AddMealsScreen> {
                         ],
                       ),
                     )
-                  : const Text("Noch keine Schritte hinzugefügt"),
+                  : Text("Noch keine Schritte hinzugefügt"),
             ),
             Text("Zutaten",
                 style: GoogleFonts.roboto(
@@ -212,7 +212,7 @@ class AddMealsState extends State<AddMealsScreen> {
                   ? 250
                   : ingredientsText.length * 50.0,
               margin: const EdgeInsets.all(10),
-              child: ingredientsText != []
+              child: ingredientsText.isNotEmpty
                   ? ListView.builder(
                       itemCount: ingredientsText.length,
                       itemBuilder: (context, index) => Column(
@@ -542,6 +542,7 @@ class _SOFState extends State<SOF> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+          title: const Text('Schritte hinzufügen'),
           leading: IconButton(
         icon: const Icon(Icons.arrow_back),
         onPressed: () {
@@ -551,11 +552,15 @@ class _SOFState extends State<SOF> {
       body: Column(
         children: <Widget>[
           Expanded(
-            child: ListView.builder(
+            child: cards.length > 0 ? ListView.builder(
               itemCount: cards.length,
               itemBuilder: (BuildContext context, int index) {
                 return cards[index];
               },
+            ): Scaffold(
+              body: Center(
+                child: Text('Noch keine Schritte hinzugefügt'),
+              ),
             ),
           ),
           Padding(
@@ -649,6 +654,7 @@ class _SOF2State extends State<SOF2> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+          title: const Text('Zutaten hinzufügen'),
           leading: IconButton(
         icon: const Icon(Icons.arrow_back),
         onPressed: () {
@@ -658,11 +664,15 @@ class _SOF2State extends State<SOF2> {
       body: Column(
         children: <Widget>[
           Expanded(
-            child: ListView.builder(
+            child: cards.length > 0 ? ListView.builder(
               itemCount: cards.length,
               itemBuilder: (BuildContext context, int index) {
                 return cards[index];
               },
+            ): Scaffold(
+              body: Center(
+                child: Text('Noch keine Zutaten hinzugefügt'),
+              ),
             ),
           ),
           Padding(

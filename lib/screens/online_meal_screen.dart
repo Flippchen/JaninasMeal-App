@@ -5,8 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:meal_app_flutter/alert_dialog.dart';
 import 'package:meal_app_flutter/html_parser.dart';
 import 'package:meal_app_flutter/main.dart';
+import 'package:meal_app_flutter/screens/add_meal_screen.dart';
+import 'package:meal_app_flutter/screens/meal_detail.dart';
+import 'package:meal_app_flutter/screens/category_screen.dart';
 import 'package:meal_app_flutter/widgets/main_drawer.dart';
 
+import '../dummy_data.dart';
 import '../models/meal.dart';
 
 class OnlineMealScreen extends StatefulWidget {
@@ -40,14 +44,46 @@ class OnlineMealState extends State<OnlineMealScreen> {
             content: Text("Erstelle Rezept..."),
           ));
           Uri url;
+          bool values;
           try {
             url = Uri.parse(inputText.text);
             print("Parsing hat geklappt\nURL: ${url.toString()}");
             try {
               var meal = await getOnlineMeal(url);
               if (meal.id != "ERROR") {
+                var all_meals = await getAllMeals();
                 print("meal erstellt");
-                // TODO: setState. navigator push edit screeen
+                values = await Navigator.push(context,
+                    MaterialPageRoute(builder: (context) {
+                  return AddMealsScreen(all_meals, meal);
+                }));
+                if (values){
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                    behavior: SnackBarBehavior.floating,
+                    margin: EdgeInsets.fromLTRB(90, 0, 90, 30),
+                    duration: Duration(milliseconds: 1500),
+                    content: Text("Rezept wurde hinzugefügt"),
+                  ));
+                  List<String> cat = await getMealCategories(meal.categories);
+                  Navigator.of(context).pushNamed(MealDetailScreen.routeName, arguments: [
+                    meal.id,
+                    setState((){}),
+                    meal.affordability,
+                    meal.complexity,
+                    meal.duration,
+                    meal.imageUrl,
+                    meal.title,
+                    meal.ingredients,
+                    meal.steps,
+                    cat,
+                    {
+                      'gluten': meal.isGlutenFree,
+                      'lactose': meal.isLactoseFree,
+                      'vegan': meal.isVegan,
+                      'vegetarian': meal.isVegetarian,
+                    },
+                  ]);
+                }
               } else {
                 showAlertDialog(context, "Fehler",
                     "Die Seite konnte nicht richtig geladen werden\nÜberprüfe deine Eingabe, deine Internetverbindung und versuche es erneut");
@@ -140,4 +176,32 @@ class OnlineMealState extends State<OnlineMealScreen> {
       ),
     );
   }
+
+  getMealCategories(List<String> categories) {
+    List<String> cat = [];
+    for (var i = 0; i < categories.length; i++) {
+      for (var j = 0; j < DUMMY_CATEGORIES.length; j++) {
+        if (categories[i] == DUMMY_CATEGORIES[j].id) {
+          cat.add(DUMMY_CATEGORIES[j].title);
+        }
+      }
+    }
+    return cat;
+  }
 }
+
+Meal ErrorMeal = const Meal(
+  id: "ERROR",
+  title: "Fehler",
+  imageUrl: "h",
+  categories: ["c12"],
+  duration: 0,
+  complexity: Complexity.simple,
+  affordability: Affordability.affordable,
+  ingredients: ["Fehler"],
+  steps: ["Fehler"],
+  isGlutenFree: false,
+  isLactoseFree: false,
+  isVegan: true,
+  isVegetarian: true,
+);

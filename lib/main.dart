@@ -298,12 +298,11 @@ Future<bool> deleteMealsFavorites(String id) async {
   return true;
 }
 
-// Donnerstag-Freitag
-// TODO: Add Button fertig
-// TODO: Turn categorie screnn and category meals screen into stateful widget --> refresh on delete meal // All Meal Screen Future Builder // Categorie screen Future Builder // Refresh wenn Bei Meal Erstellung ein Step gelöscht wird
+// Donnerstag
+// TODO: Edit Button Funktion hinzufügen
 
 // Samstag
-// TODO: Edit Button Funktion hinzufügen
+// TODO: Turn categorie screnn and category meals screen into stateful widget --> refresh on delete meal // All Meal Screen Future Builder // Categorie screen Future Builder // Refresh wenn Bei Meal Erstellung ein Step gelöscht wird
 // TODO: Bilder als relativer Pfad und hinzufügen Button und Jagdwurst Parser anpassen usw
 
 //Sonntag

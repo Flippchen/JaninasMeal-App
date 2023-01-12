@@ -115,6 +115,18 @@ class AddMealsState extends State<AddMealsScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            const SizedBox(
+              height: 5,
+            ),
+            Container(
+              margin: const EdgeInsets.all(10),
+              child: TextField(
+                controller: imageUrl,
+                decoration: const InputDecoration(
+                  labelText: 'imageURL',
+                ),
+              ),
+            ),
             Container(
               margin: const EdgeInsets.all(10),
               child: TextField(
@@ -124,9 +136,22 @@ class AddMealsState extends State<AddMealsScreen> {
                 ),
               ),
             ),
+            Container(
+              margin: const EdgeInsets.all(10),
+              child: TextField(
+                keyboardType: TextInputType.number,
+                controller: duration,
+                decoration: const InputDecoration(
+                  labelText: 'Dauer',
+                ),
+              ),
+            ),
             Text("Zubereitung",
                 style: GoogleFonts.roboto(
                     fontSize: 23, fontWeight: FontWeight.normal)),
+            const SizedBox(
+              height: 5,
+            ),
             ElevatedButton(
               child: stepsText.length > 0
                   ? const Text('Ändere oder lösche Schritte')
@@ -185,6 +210,9 @@ class AddMealsState extends State<AddMealsScreen> {
             Text("Zutaten",
                 style: GoogleFonts.roboto(
                     fontSize: 23, fontWeight: FontWeight.normal)),
+            const SizedBox(
+              height: 5,
+            ),
             ElevatedButton(
               child: ingredientsText.length > 0
                   ? const Text('Ändere oder lösche Zutaten')
@@ -240,58 +268,44 @@ class AddMealsState extends State<AddMealsScreen> {
                     )
                   : const Text("Noch keine Zutaten hinzugefügt"),
             ),
-            Container(
-              margin: const EdgeInsets.all(10),
-              child: TextField(
-                keyboardType: TextInputType.number,
-                controller: duration,
-                decoration: const InputDecoration(
-                  labelText: 'Dauer',
-                ),
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.all(10),
-              child: TextField(
-                controller: imageUrl,
-                decoration: const InputDecoration(
-                  labelText: 'imageURL',
-                ),
-              ),
+            const SizedBox(
+              height: 10,
             ),
             // A DropdownButton for the complexity
             Row(
               children: [
-                Text(
-                  "Schwierigkeite des Rezepts:",
+                Row(children: [const SizedBox(width: 10,),Text(
+                  "Schwierigkeit des Rezepts:",
                   style: GoogleFonts.lato(
                       textStyle: const TextStyle(
                           color: Colors.black,
                           fontSize: 20,
                           fontWeight: FontWeight.normal)),
                 ),
-                const SizedBox(
-                  width: 20,
-                ),
-                DropdownButton<Complexity>(
-                  value: complexity,
-                  onChanged: (Complexity? newValue) {
-                    setState(() {
-                      complexity = newValue!;
-                    });
-                  },
-                  items: Complexity.values
-                      .map<DropdownMenuItem<Complexity>>((Complexity value) {
-                    return DropdownMenuItem<Complexity>(
-                      value: value,
-                      child: Text(getMealComplexity(value)),
-                    );
-                  }).toList(),
-                ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  DropdownButton<Complexity>(
+                    value: complexity,
+                    onChanged: (Complexity? newValue) {
+                      setState(() {
+                        complexity = newValue!;
+                      });
+                    },
+                    items: Complexity.values
+                        .map<DropdownMenuItem<Complexity>>((Complexity value) {
+                      return DropdownMenuItem<Complexity>(
+                        value: value,
+                        child: Text(getMealComplexity(value)),
+                      );
+                    }).toList(),
+                  ),],),
+
               ],
             ),
             Row(
               children: [
+                const SizedBox(width: 10,),
                 Text(
                   "Preis des Rezepts:",
                   style: GoogleFonts.lato(
@@ -417,7 +431,7 @@ class AddMealsState extends State<AddMealsScreen> {
               ),
             ),
             const SizedBox(
-              height: 30,
+              height: 100,
             ),
             // A DropdownButton for the affordability
           ],

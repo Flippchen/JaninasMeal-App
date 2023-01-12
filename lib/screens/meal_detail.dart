@@ -5,6 +5,7 @@ import 'package:meal_app_flutter/models/meal.dart';
 
 import '../alert_dialog.dart';
 import '../main.dart';
+import 'add_meal_screen.dart';
 
 class MealDetailScreen extends StatelessWidget {
   static const routeName = '/meal-deatil';
@@ -253,7 +254,22 @@ class MealDetailScreen extends StatelessWidget {
                       borderRadius:
                           const BorderRadius.all(Radius.circular(20))),
                   child: TextButton.icon(
-                    onPressed: () => null,
+                    onPressed: () async {
+                      bool values;
+                      var all_meals = await getAllMeals();
+
+                      values = await Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                            return AddMealsScreen(all_meals, selectedMeal);
+                          }));
+                      if(values){
+                        callback();
+                      }
+                      else{
+                        await showAlertDialog(context, "Fehler", "Das Rezept konnte nicht bearbeitet werden");
+                      }
+                    },
+                    // TODO: Add Refresh?
                     icon: const Icon(
                       Icons.edit,
                       color: Colors.yellow,

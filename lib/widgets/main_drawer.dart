@@ -33,7 +33,8 @@ class MainDrawer extends StatelessWidget {
             color: Theme.of(context).accentColor,
             child: TextButton(
               onLongPress: () {
-                showLoveDialog(context, "Ich liebe dich ❤️", "Bebi, du bist der wundervollste Mensch, den ich kenne.\nIch bin so froh, dich in meinem Leben zu haben\nIch liebe dich für immer❤️");
+                showLoveDialog(context, "Ich liebe dich ❤️",
+                    "Bebi, du bist der wundervollste Mensch, den ich kenne.\nIch bin so froh, dich in meinem Leben zu haben\nIch liebe dich für immer❤️");
               },
               onPressed: () {},
               child: Text(

@@ -26,6 +26,7 @@ showAlertDialog(BuildContext context, String title, String content) {
     },
   );
 }
+
 showLoveDialog(BuildContext context, String title, String content) {
   // set up the button
   Widget okButton = TextButton(
@@ -41,8 +42,11 @@ showLoveDialog(BuildContext context, String title, String content) {
   // set up the AlertDialog
   AlertDialog alert = AlertDialog(
     backgroundColor: const Color(0xFF851E2D),
-    title: Text(title,style: TextStyle(color: const Color(0xFFDCCBE3))),
-    content: Text(content, style: TextStyle(color: const Color(0xFFDCCBE3)),),
+    title: Text(title, style: TextStyle(color: const Color(0xFFDCCBE3))),
+    content: Text(
+      content,
+      style: TextStyle(color: const Color(0xFFDCCBE3)),
+    ),
     actions: [
       okButton,
     ],
@@ -85,4 +89,3 @@ class AlertWidget extends StatelessWidget {
     );
   }
 }
-

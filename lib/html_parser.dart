@@ -24,12 +24,13 @@ Future<Meal> getOnlineMeal(Uri url) async {
     // Search for the recipe title
     String title = "";
     try {
-      title =
-          document.querySelector("span.border-module--text--yNYGU").toString();
+      var tempTitel =
+          document.querySelector("span.border-module--text--yNYGU")?.text.toString();
+      title = tempTitel ?? "Fehler beim Titel";
     } catch (e) {
       title = "Kein Titel gefunden";
     }
-
+    print(title);
     // Search for the recipe ingredients
     final ingredients =
         document.querySelectorAll("div.card-module--ingredients--QK-on li");
@@ -97,6 +98,7 @@ Future<Meal> getOnlineMeal(Uri url) async {
       isVegan: true,
       isVegetarian: true,
     );
+    print(meal.title);
     return meal;
   } else {
     debugPrint("Failed to load website");

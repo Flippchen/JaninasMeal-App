@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -10,19 +11,24 @@ import 'package:meal_app_flutter/dummy_data.dart';
 import 'package:meal_app_flutter/models/category.dart';
 import '../models/meal.dart';
 import '../widgets/meal_item.dart';
+import 'category_meals_screen.dart';
 import 'category_screen.dart';
+import 'meal_detail.dart';
 
 class AddMealsScreen extends StatefulWidget {
   static const routeName = '/add-meal';
   final List<Meal> availableMeals;
+  final Meal meal;
 
-  AddMealsScreen(this.availableMeals);
+  AddMealsScreen(this.availableMeals, this.meal);
 
   @override
   State<AddMealsScreen> createState() => AddMealsState();
 }
 
 class AddMealsState extends State<AddMealsScreen> {
+  late Meal meal;
+
   var finalsteps = <TextEditingController>[];
   var id = "test";
   var title = TextEditingController();
@@ -47,6 +53,33 @@ class AddMealsState extends State<AddMealsScreen> {
   List<String> selectedFilters = [];
 
   @override
+  void initState() {
+    if (widget.meal.id != "ERROR") {
+      title.text = widget.meal.title;
+      imageUrl.text = widget.meal.imageUrl;
+      duration.text = widget.meal.duration.toString();
+      complexity = widget.meal.complexity;
+      affordability = widget.meal.affordability;
+      stepsText = widget.meal.steps; // Maybe finalsteps
+      ingredientsText = widget.meal.ingredients; // Maybe finalIngredients
+      selectedCategories = widget.meal.categories;
+      if (widget.meal.isGlutenFree) {
+        selectedFilters.add("Glutenfrei");
+      }
+      if (widget.meal.isLactoseFree) {
+        selectedFilters.add("Laktosefrei");
+      }
+      if (widget.meal.isVegetarian) {
+        selectedFilters.add("Vegetarisch");
+      }
+      if (widget.meal.isVegan) {
+        selectedFilters.add("Vegan");
+      }
+    }
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -62,13 +95,12 @@ class AddMealsState extends State<AddMealsScreen> {
             content: Text("Erstelle Rezept..."),
           ));
 
-          var creation;
+          var creation = false;
           try {
-            Meal meal = Meal(
+            meal = Meal(
               id: imageUrl.text.hashCode.toString(),
               title: title.text,
-              imageUrl:
-                  "https://images.pexels.com/photos/1565982/pexels-photo-1565982.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", //imageUrl.text,
+              imageUrl: imageUrl.text,
               duration: int.parse(duration.text),
               complexity: complexity,
               affordability: affordability,
@@ -83,27 +115,74 @@ class AddMealsState extends State<AddMealsScreen> {
                   selectedFilters.contains("Vegetarisch") ? true : false,
               categories: selectedCategories,
             );
-            creation = await addMeals(meal);
+            // TODO: Fix logic error and check if meal is in favourites
+            var meals = await getAllMeals();
+            //var meals = widget.availableMeals;
+            print("widget.meal");
+            print(widget.meal.id);
+            print(meal.id);
+            List mealIds = meals.map((e) => e.id).toList();
+            print(mealIds);
+            mealIds.contains(widget.meal.id)
+                ? print("Meal already exists")
+                : print("Meal does not exist");
+            if (!mealIds.contains(widget.meal.id)) {
+              print("Creating meal");
+              print(meal.toJson().toString());
+              creation = await addMeals(meal);
+              print("Added Meal");
+            } else {
+              creation = await updateMeals(meal);
+              print("Updated Meal");
+              // TODO: Add Refresh
+            }
           } catch (e) {
             creation = false;
+            print("Error, creation false");
           }
 
           debugPrint(creation.toString());
-          if (creation) {
-            setState(() {
+          if (creation && (widget.meal.id != "ERROR")) {
+            print("Screen popped");
+            // Bearbeitungsmodus und erfolgreich //TODO: Wenn Error bei online Meal, dann passiert das auch / ein Input Meal erstellen wo dann auch route zu categoriescreen ist
+            Navigator.pop(context, [true, meal]);
+          } else if (creation && (widget.meal.id == "ERROR")) {
+            // Neues Rezept und erfolgreich
+            setState(() async {
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                 behavior: SnackBarBehavior.floating,
                 margin: EdgeInsets.fromLTRB(90, 0, 90, 30),
                 duration: Duration(milliseconds: 800),
                 content: Text("Rezept erstellt!"),
               ));
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return CategoriesScreen();
-              }));
+              List<String> cat = await getMealCategories(meal.categories);
+              print(meal.affordability.toString());
+              print(meal.complexity.toString());
+              await Navigator.of(context)
+                  .pushNamed(MealDetailScreen.routeName, arguments: [
+                meal.id,
+                setState(() {}),
+                meal.affordability,
+                meal.complexity,
+                meal.duration,
+                meal.imageUrl,
+                meal.title,
+                meal.ingredients,
+                meal.steps,
+                cat,
+                {
+                  'gluten': meal.isGlutenFree,
+                  'lactose': meal.isLactoseFree,
+                  'vegan': meal.isVegan,
+                  'vegetarian': meal.isVegetarian,
+                },
+              ]);
+              Navigator.of(context).pushReplacementNamed('/');
             });
           } else {
+            // Nicht erfolgreich
             showAlertDialog(context, "Fehler",
-                "Rezept konnte nicht erstellt werden\Überprüfe deine Angaben und versuche es erneut");
+                "Rezept konnte nicht erstellt werden\nÜberprüfe deine Angaben und versuche es erneut");
           }
         },
         backgroundColor: Theme.of(context).colorScheme.primary,
@@ -175,7 +254,7 @@ class AddMealsState extends State<AddMealsScreen> {
                 ),
               ),
               width: 400,
-              height: (stepsText.length ) * 50.0 >= 250
+              height: (stepsText.length) * 50.0 >= 250
                   ? 250
                   : stepsText.length * 50.0,
               margin: const EdgeInsets.all(10),
@@ -274,38 +353,47 @@ class AddMealsState extends State<AddMealsScreen> {
             // A DropdownButton for the complexity
             Row(
               children: [
-                Row(children: [const SizedBox(width: 10,),Text(
-                  "Schwierigkeit des Rezepts:",
-                  style: GoogleFonts.lato(
-                      textStyle: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                          fontWeight: FontWeight.normal)),
+                Row(
+                  children: [
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Schwierigkeit des Rezepts:",
+                      style: GoogleFonts.lato(
+                          textStyle: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
+                              fontWeight: FontWeight.normal)),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    DropdownButton<Complexity>(
+                      value: complexity,
+                      onChanged: (Complexity? newValue) {
+                        setState(() {
+                          complexity = newValue!;
+                        });
+                      },
+                      items: Complexity.values
+                          .map<DropdownMenuItem<Complexity>>(
+                              (Complexity value) {
+                        return DropdownMenuItem<Complexity>(
+                          value: value,
+                          child: Text(getMealComplexity(value)),
+                        );
+                      }).toList(),
+                    ),
+                  ],
                 ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  DropdownButton<Complexity>(
-                    value: complexity,
-                    onChanged: (Complexity? newValue) {
-                      setState(() {
-                        complexity = newValue!;
-                      });
-                    },
-                    items: Complexity.values
-                        .map<DropdownMenuItem<Complexity>>((Complexity value) {
-                      return DropdownMenuItem<Complexity>(
-                        value: value,
-                        child: Text(getMealComplexity(value)),
-                      );
-                    }).toList(),
-                  ),],),
-
               ],
             ),
             Row(
               children: [
-                const SizedBox(width: 10,),
+                const SizedBox(
+                  width: 10,
+                ),
                 Text(
                   "Preis des Rezepts:",
                   style: GoogleFonts.lato(
@@ -478,6 +566,18 @@ class AddMealsState extends State<AddMealsScreen> {
         return 'Unbekannt';
     }
   }
+
+  getMealCategories(List<String> categories) {
+    List<String> cat = [];
+    for (var i = 0; i < categories.length; i++) {
+      for (var j = 0; j < DUMMY_CATEGORIES.length; j++) {
+        if (categories[i] == DUMMY_CATEGORIES[j].id) {
+          cat.add(DUMMY_CATEGORIES[j].title);
+        }
+      }
+    }
+    return cat;
+  }
 }
 
 class SOF extends StatefulWidget {
@@ -558,24 +658,26 @@ class _SOFState extends State<SOF> {
       appBar: AppBar(
           title: const Text('Schritte hinzufügen'),
           leading: IconButton(
-        icon: const Icon(Icons.arrow_back),
-        onPressed: () {
-          _onDone();
-        },
-      )),
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              _onDone();
+            },
+          )),
       body: Column(
         children: <Widget>[
           Expanded(
-            child: cards.length > 0 ? ListView.builder(
-              itemCount: cards.length,
-              itemBuilder: (BuildContext context, int index) {
-                return cards[index];
-              },
-            ): Scaffold(
-              body: Center(
-                child: Text('Noch keine Schritte hinzugefügt'),
-              ),
-            ),
+            child: cards.length > 0
+                ? ListView.builder(
+                    itemCount: cards.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return cards[index];
+                    },
+                  )
+                : Scaffold(
+                    body: Center(
+                      child: Text('Noch keine Schritte hinzugefügt'),
+                    ),
+                  ),
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),
@@ -670,24 +772,26 @@ class _SOF2State extends State<SOF2> {
       appBar: AppBar(
           title: const Text('Zutaten hinzufügen'),
           leading: IconButton(
-        icon: const Icon(Icons.arrow_back),
-        onPressed: () {
-          _onDone();
-        },
-      )),
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              _onDone();
+            },
+          )),
       body: Column(
         children: <Widget>[
           Expanded(
-            child: cards.length > 0 ? ListView.builder(
-              itemCount: cards.length,
-              itemBuilder: (BuildContext context, int index) {
-                return cards[index];
-              },
-            ): Scaffold(
-              body: Center(
-                child: Text('Noch keine Zutaten hinzugefügt'),
-              ),
-            ),
+            child: cards.length > 0
+                ? ListView.builder(
+                    itemCount: cards.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return cards[index];
+                    },
+                  )
+                : Scaffold(
+                    body: Center(
+                      child: Text('Noch keine Zutaten hinzugefügt'),
+                    ),
+                  ),
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),

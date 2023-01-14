@@ -1,16 +1,13 @@
 # meal_app_flutter
-
-A new Flutter project.
+This is a recipe app built using Flutter. The app allows users to manage and view a variety of different recipes.
 
 ## Getting Started
+run `flutter pub get` to install all the dependencies.
+run `flutter run` to start the app.
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Features
+Filter recipes by category and allergies or preferences.
+View detailed recipe information including ingredients, instructions, cooking time, difficulty, and more.
+Save favorite recipes for easy access
+Create, edit, and delete your own recipes
+Add recipes from a weblink from Zuckerbrot&Jagdwurst

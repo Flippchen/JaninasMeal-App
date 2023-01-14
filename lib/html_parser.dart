@@ -24,8 +24,10 @@ Future<Meal> getOnlineMeal(Uri url) async {
     // Search for the recipe title
     String title = "";
     try {
-      var tempTitel =
-          document.querySelector("span.border-module--text--yNYGU")?.text.toString();
+      var tempTitel = document
+          .querySelector("span.border-module--text--yNYGU")
+          ?.text
+          .toString();
       title = tempTitel ?? "Fehler beim Titel";
     } catch (e) {
       title = "Kein Titel gefunden";

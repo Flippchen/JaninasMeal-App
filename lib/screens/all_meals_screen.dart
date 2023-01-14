@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:meal_app_flutter/main.dart';
 import 'package:meal_app_flutter/widgets/main_drawer.dart';
 
 import '../models/meal.dart';
@@ -34,6 +35,14 @@ class AllMealsState extends State<AllMealsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          var displayedMealsNew = await getAllMeals();
+          setState(() {
+            displayedMeals = displayedMealsNew;
+          });
+        },
+      ),
       appBar: AppBar(
         title: const Text('Alle Mahlzeiten'),
       ),

@@ -4,10 +4,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:meal_app_flutter/models/meal.dart';
 
 import '../alert_dialog.dart';
+import '../dummy_data.dart';
 import '../main.dart';
 import 'add_meal_screen.dart';
 
-class MealDetailScreen extends StatelessWidget {
+class MealDetailScreen extends StatefulWidget {
   static const routeName = '/meal-deatil';
   final Function toggleFavourite, isFavourite;
   final Function? callback;
@@ -16,6 +17,27 @@ class MealDetailScreen extends StatelessWidget {
       required this.isFavourite,
       this.callback});
 
+  @override
+  State<MealDetailScreen> createState() => _MealDetailScreenState();
+}
+
+class _MealDetailScreenState extends State<MealDetailScreen> {
+  bool isInit = false;
+  late final List mealargs;
+  late final String mealId;
+  late final Function? callback;
+  late final Affordability affordability;
+  late final Complexity complexity;
+  late final int duration;
+  late final String imageUrl;
+  late final String title;
+  late final List<String> ingredients;
+  late final List<String> steps;
+  late final categories;
+  late List<String> showCategories;
+  //print(categories.toString());
+  late final Map filters;
+  late Meal selectedMeal;
   Widget buildSectionTitle(String text, BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
@@ -43,37 +65,42 @@ class MealDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mealargs = ModalRoute.of(context)!.settings.arguments as List;
-    final mealId = mealargs[0];
-    final callback = mealargs[1];
-    final affordability = mealargs[2];
-    final complexity = mealargs[3];
-    final duration = mealargs[4];
-    final imageUrl = mealargs[5];
-    final title = mealargs[6];
-    final List<String> ingredients =
-        (mealargs[7] as List).map((item) => item as String).toList();
-    final List<String> steps =
-        (mealargs[8] as List).map((item) => item as String).toList();
-    final categories =
-        (mealargs[9] as List).map((item) => item as String).toList();
-    final filters = mealargs[10];
-    final Meal selectedMeal = Meal(
-      id: mealId,
-      title: title,
-      categories: categories,
-      affordability: affordability,
-      complexity: complexity,
-      duration: duration,
-      imageUrl: imageUrl,
-      ingredients: ingredients,
-      steps: steps,
-      isGlutenFree: filters['gluten'],
-      isLactoseFree: filters['lactose'],
-      isVegan: filters['vegan'],
-      isVegetarian: filters['vegetarian'],
-    );
-
+    if (!isInit) {
+      setState(() {
+        final mealargs = ModalRoute.of(context)!.settings.arguments as List;
+        mealId = mealargs[0];
+        callback = mealargs[1];
+        affordability = mealargs[2];
+        complexity = mealargs[3];
+        duration = mealargs[4];
+        imageUrl = mealargs[5];
+        title = mealargs[6];
+        ingredients =
+            (mealargs[7] as List).map((item) => item as String).toList();
+        steps = (mealargs[8] as List).map((item) => item as String).toList();
+        categories =
+            (mealargs[9] as List).map((item) => item as String).toList();
+        showCategories = getMealCategories(categories);
+        print(categories.toString());
+        filters = mealargs[10];
+        selectedMeal = Meal(
+          id: mealId,
+          title: title,
+          categories: categories,
+          affordability: affordability,
+          complexity: complexity,
+          duration: duration,
+          imageUrl: imageUrl,
+          ingredients: ingredients,
+          steps: steps,
+          isGlutenFree: filters['gluten'],
+          isLactoseFree: filters['lactose'],
+          isVegan: filters['vegan'],
+          isVegetarian: filters['vegetarian'],
+        );
+        isInit = true;
+      });
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text(selectedMeal.title),
@@ -81,7 +108,7 @@ class MealDetailScreen extends StatelessWidget {
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
             if (callback != null) {
-              callback();
+              callback!();
             }
             Navigator.of(context).pop();
           },
@@ -204,11 +231,11 @@ class MealDetailScreen extends StatelessWidget {
                         style: GoogleFonts.roboto(
                             fontSize: 25, fontWeight: FontWeight.w500))),
             buildSectionTitle('Kategorien', context),
-            selectedMeal.categories != []
+            showCategories != []
                 ? buildContainer(
                     height: 130,
                     ListView.builder(
-                      itemCount: selectedMeal.categories.length,
+                      itemCount: showCategories.length,
                       itemBuilder: (context, index) => Column(
                         children: [
                           ListTile(
@@ -221,7 +248,7 @@ class MealDetailScreen extends StatelessWidget {
                               ),
                             ),
                             title: Text(
-                              selectedMeal.categories[index],
+                              showCategories[index],
                               style: GoogleFonts.lato(
                                   textStyle: const TextStyle(
                                       color: Colors.black,
@@ -255,18 +282,25 @@ class MealDetailScreen extends StatelessWidget {
                           const BorderRadius.all(Radius.circular(20))),
                   child: TextButton.icon(
                     onPressed: () async {
-                      bool values;
+                      List values;
                       var all_meals = await getAllMeals();
 
                       values = await Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
-                            return AddMealsScreen(all_meals, selectedMeal);
-                          }));
-                      if(values){
-                        callback();
-                      }
-                      else{
-                        await showAlertDialog(context, "Fehler", "Das Rezept konnte nicht bearbeitet werden");
+                        return AddMealsScreen(all_meals, selectedMeal);
+                      }));
+                      print(values.toString());
+                      if (values[0]) {
+                        print("Wir sind angekommen");
+                        print(values[1].toString());
+                        Meal selectedMealNew = values[1];
+                        setState(() {
+                          selectedMeal = selectedMealNew;
+                          print("Selected Meal: " + selectedMeal.toString());
+                        });
+                      } else {
+                        await showAlertDialog(context, "Fehler",
+                            "Das Rezept konnte nicht bearbeitet werden");
                       }
                     },
                     // TODO: Add Refresh?
@@ -299,8 +333,8 @@ class MealDetailScreen extends StatelessWidget {
                         builder: (BuildContext context) => AlertWidget(),
                       );
                       if (delete) {
-                        await deleteMeals(selectedMeal.id);
-                        await deleteMealsFavorites(selectedMeal.id);
+                        var value = await deleteMeals(selectedMeal.id);
+                        var value2 = deleteMealsFavorites(selectedMeal.id);
                         Navigator.pop(context, true);
                         debugPrint("gelöscht");
                       }
@@ -329,9 +363,10 @@ class MealDetailScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).colorScheme.primary,
-        child:
-            Icon(isFavourite(mealId) ? Icons.favorite : Icons.favorite_outline),
-        onPressed: () => toggleFavourite(mealId),
+        child: Icon(widget.isFavourite(mealId)
+            ? Icons.favorite
+            : Icons.favorite_outline),
+        onPressed: () => widget.toggleFavourite(mealId),
       ),
     );
   }
@@ -372,5 +407,29 @@ class MealDetailScreen extends StatelessWidget {
       default:
         return 'Unbekannt';
     }
+  }
+
+  List<String> getMealCategories_id(List<String> categories) {
+    List<String> cat = [];
+    for (var i = 0; i < categories.length; i++) {
+      for (var j = 0; j < DUMMY_CATEGORIES.length; j++) {
+        if (categories[i] == DUMMY_CATEGORIES[j].title) {
+          cat.add(DUMMY_CATEGORIES[j].id);
+        }
+      }
+    }
+    return cat;
+  }
+
+  getMealCategories(List<String> categories) {
+    List<String> cat = [];
+    for (var i = 0; i < categories.length; i++) {
+      for (var j = 0; j < DUMMY_CATEGORIES.length; j++) {
+        if (categories[i] == DUMMY_CATEGORIES[j].id) {
+          cat.add(DUMMY_CATEGORIES[j].title);
+        }
+      }
+    }
+    return cat;
   }
 }

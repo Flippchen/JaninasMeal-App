@@ -44,7 +44,7 @@ class OnlineMealState extends State<OnlineMealScreen> {
             content: Text("Erstelle Rezept..."),
           ));
           Uri url;
-          bool values;
+          List values;
           try {
             url = Uri.parse(inputText.text);
             print("Parsing hat geklappt\nURL: ${url.toString()}");
@@ -57,30 +57,33 @@ class OnlineMealState extends State<OnlineMealScreen> {
                     MaterialPageRoute(builder: (context) {
                   return AddMealsScreen(all_meals, meal);
                 }));
-                if (values){
+                if (values[0]) {
                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                     behavior: SnackBarBehavior.floating,
                     margin: EdgeInsets.fromLTRB(90, 0, 90, 30),
                     duration: Duration(milliseconds: 1500),
                     content: Text("Rezept wurde hinzugefügt"),
                   ));
-                  List<String> cat = await getMealCategories(meal.categories);
-                  Navigator.of(context).pushNamed(MealDetailScreen.routeName, arguments: [
-                    meal.id,
-                    setState((){}),
-                    meal.affordability,
-                    meal.complexity,
-                    meal.duration,
-                    meal.imageUrl,
-                    meal.title,
-                    meal.ingredients,
-                    meal.steps,
-                    cat,
+                  Meal created_meal = values[1];
+                  //List<String> cat =
+                  //    await getMealCategories(created_meal.categories);
+                  Navigator.of(context)
+                      .pushNamed(MealDetailScreen.routeName, arguments: [
+                    created_meal.id,
+                    setState(() {}),
+                    created_meal.affordability,
+                    created_meal.complexity,
+                    created_meal.duration,
+                    created_meal.imageUrl,
+                    created_meal.title,
+                    created_meal.ingredients,
+                    created_meal.steps,
+                    created_meal.categories,
                     {
-                      'gluten': meal.isGlutenFree,
-                      'lactose': meal.isLactoseFree,
-                      'vegan': meal.isVegan,
-                      'vegetarian': meal.isVegetarian,
+                      'gluten': created_meal.isGlutenFree,
+                      'lactose': created_meal.isLactoseFree,
+                      'vegan': created_meal.isVegan,
+                      'vegetarian': created_meal.isVegetarian,
                     },
                   ]);
                 }

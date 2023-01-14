@@ -28,7 +28,7 @@ class MealItem extends StatelessWidget {
   });
 
   Future<bool> selectMeal(BuildContext context) async {
-    List<String> cat = await getMealCategories(categories);
+    //List<String> cat = await getMealCategories(categories);
 
     Navigator.of(context).pushNamed(MealDetailScreen.routeName, arguments: [
       id,
@@ -40,10 +40,15 @@ class MealItem extends StatelessWidget {
       title,
       ingredients,
       steps,
-      cat,
+      categories,
       filters
     ]).then((result) {
-      if (result != null) {}
+      if (result != null) {
+        callback!();
+      }
+      //if (result){
+      //
+      //}
     });
     return true;
   }
@@ -173,17 +178,5 @@ class MealItem extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  getMealCategories(List<String> categories) {
-    List<String> cat = [];
-    for (var i = 0; i < categories.length; i++) {
-      for (var j = 0; j < DUMMY_CATEGORIES.length; j++) {
-        if (categories[i] == DUMMY_CATEGORIES[j].id) {
-          cat.add(DUMMY_CATEGORIES[j].title);
-        }
-      }
-    }
-    return cat;
   }
 }

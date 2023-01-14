@@ -158,7 +158,8 @@ class _MyAppState extends State<MyApp> {
             FiltersScreen(_setFilters, _filters),
         OnlineMealScreen.routeName: (context) => OnlineMealScreen(),
         AllMealsScreen.routeName: (context) => AllMealsScreen(_availableMeals),
-        AddMealsScreen.routeName: (context) => AddMealsScreen(_availableMeals),
+        AddMealsScreen.routeName: (context) =>
+            AddMealsScreen(_availableMeals, ErrorMeal),
       },
       onGenerateRoute: (settings) {
         print(settings.arguments);
@@ -298,17 +299,16 @@ Future<bool> deleteMealsFavorites(String id) async {
   return true;
 }
 
-// Donnerstag
-// TODO: Edit Button Funktion hinzufügen
+// Samstag Mittag
+// TODO: Edit Button Funktion hinzufügen auf Favourites checken
 
-// Samstag
+// Samstag Abend
 // TODO: Turn categorie screnn and category meals screen into stateful widget --> refresh on delete meal // All Meal Screen Future Builder // Categorie screen Future Builder // Refresh wenn Bei Meal Erstellung ein Step gelöscht wird
+
+// Sonntag
 // TODO: Bilder als relativer Pfad und hinzufügen Button und Jagdwurst Parser anpassen usw
 
-//Sonntag
-// TODO: Readme schreiben
-// TODO: Startbild und Appbild --> Playestore
-
 // Future
+// TODO: Startbild und Appbild --> Playestore
 // TODO: Rezeptgröße auf Personen anpassen und Angabe Rezept Anzahl Personen
 // TODO: Mealitem durch Kommentar erweitern

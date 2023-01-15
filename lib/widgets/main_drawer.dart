@@ -71,14 +71,28 @@ class MainDrawer extends StatelessWidget {
             },
           ),
           buildListTile(
-            'Importieren',
+            'Online Rezept',
             Icons.import_export,
             () {
               Navigator.of(context).pushReplacementNamed('/online-meal');
             },
           ),
           const SizedBox(
-            height: 470,
+            height: 350,
+          ),
+          buildListTile(
+            'Importieren',
+            Icons.upload,
+            () {
+              Navigator.of(context).pushReplacementNamed('/import-meals');
+            },
+          ),
+          buildListTile(
+            'Exportieren',
+            Icons.save_alt_outlined,
+            () {
+              Navigator.of(context).pushReplacementNamed('/export-meals');
+            },
           ),
           buildListTile(
             'Filter',

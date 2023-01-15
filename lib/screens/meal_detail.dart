@@ -110,7 +110,7 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
             if (callback != null) {
               callback!();
             }
-            Navigator.of(context).pop();
+            Navigator.pop(context, true);
           },
         ),
       ),
@@ -334,9 +334,15 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
                       );
                       if (delete) {
                         var value = await deleteMeals(selectedMeal.id);
-                        var value2 = deleteMealsFavorites(selectedMeal.id);
-                        Navigator.pop(context, true);
-                        debugPrint("gelöscht");
+                        var value2 =
+                            await deleteMealsFavorites(selectedMeal.id);
+                        if (value && value2) {
+                          Navigator.pop(context, true);
+                          debugPrint("gelöscht");
+                        } else {
+                          await showAlertDialog(context, "Fehler",
+                              "Das Rezept konnte nicht gelöscht werden");
+                        }
                       }
                     },
                     icon: Icon(

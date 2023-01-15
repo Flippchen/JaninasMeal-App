@@ -96,6 +96,7 @@ class AddMealsState extends State<AddMealsScreen> {
           ));
 
           var creation = false;
+          var favCreation = false;
           try {
             meal = Meal(
               id: imageUrl.text.hashCode.toString(),
@@ -117,7 +118,9 @@ class AddMealsState extends State<AddMealsScreen> {
             );
             // TODO: Fix logic error and check if meal is in favourites
             var meals = await getAllMeals();
+            bool fav = await isMealFavourite(meal.id);
             //var meals = widget.availableMeals;
+            print("Favourite: $fav");
             print("widget.meal");
             print(widget.meal.id);
             print(meal.id);
@@ -130,14 +133,25 @@ class AddMealsState extends State<AddMealsScreen> {
               print("Creating meal");
               print(meal.toJson().toString());
               creation = await addMeals(meal);
+              print("Meal is favourite $fav");
+              if (fav) {
+                favCreation = await addMealsFavorite(meal);
+                creation = creation && favCreation;
+              }
+              creation = creation;
               print("Added Meal");
             } else {
               creation = await updateMeals(meal);
-              print("Updated Meal");
-              // TODO: Add Refresh
+              if (fav) {
+                favCreation = await updateMealsFavorite(meal);
+                creation = creation && favCreation;
+              }
+              creation = creation;
+              print("Updated Meal: $creation");
             }
           } catch (e) {
             creation = false;
+            favCreation = false;
             print("Error, creation false");
           }
 

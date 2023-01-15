@@ -7,6 +7,8 @@ import 'package:meal_app_flutter/models/meal.dart';
 import 'package:meal_app_flutter/screens/add_meal_screen.dart';
 import 'package:meal_app_flutter/screens/all_meals_screen.dart';
 import 'package:meal_app_flutter/screens/category_meals_screen.dart';
+import 'package:meal_app_flutter/screens/export_screen.dart';
+import 'package:meal_app_flutter/screens/import_screen.dart';
 import 'package:meal_app_flutter/screens/online_meal_screen.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:meal_app_flutter/screens/category_screen.dart';
@@ -160,6 +162,8 @@ class _MyAppState extends State<MyApp> {
         AllMealsScreen.routeName: (context) => AllMealsScreen(_availableMeals),
         AddMealsScreen.routeName: (context) =>
             AddMealsScreen(_availableMeals, ErrorMeal),
+        ExportMealScreen.routeName: (context) => ExportMealScreen(),
+        ImportMealScreen.routeName: (context) => ImportMealScreen(),
       },
       onGenerateRoute: (settings) {
         print(settings.arguments);
@@ -198,6 +202,27 @@ Future<File> writeMeals(Iterable<String> objects) async {
   final file = await _localFile;
   // Write the file
   return file.writeAsString("[${objects.join(",")}]");
+}
+
+Future<bool> writeAllMeals(Iterable<String> objects) async {
+  final file = await _localFile;
+  file.writeAsString("[${objects.join(",")}]").then((value) => true);
+  return true;
+}
+
+Future<bool> loadAllSavedMeals(String name) async {
+  final dir = await getExternalStorageDirectory();
+  var path = dir?.path;
+  var file = await File('$path/$name');
+  var contents = await file.readAsString();
+  List<Meal> mealsList = [];
+  var decoded = json.decode(contents);
+  decoded.forEach((meal) {
+    mealsList.add(Meal.fromJson(meal));
+  });
+  var encoded = mealsList.map((meal) => json.encode(meal.toJson()));
+  await writeMeals(encoded);
+  return true;
 }
 
 Future<String> readMeals() async {
@@ -249,6 +274,16 @@ Future<bool> deleteMeals(String id) async {
   return true;
 }
 
+Future<bool> saveAllMeals(Iterable<String> objects, String name) async {
+  final dir = await getExternalStorageDirectory();
+  var path = dir?.path;
+  var file = await File('$path/$name').create();
+  await file.writeAsString("[${objects.join(",")}]");
+  print("Saved file to: $path/$name");
+  // Write the file
+  return true;
+}
+
 /// Favorite Meals
 Future<File> get _localFileFav async {
   final path = await _localPath;
@@ -291,6 +326,28 @@ Future<List<Meal>> getAllFavouriteMeals() async {
   return mealsList;
 }
 
+Future<bool> addMealsFavorite(Meal meal) async {
+  var meals = await getAllFavouriteMeals();
+  meals.add(meal);
+  var encoded = meals.map((meal) => json.encode(meal.toJson()));
+  await writeMealsFav(encoded);
+  return true;
+}
+
+Future<bool> updateMealsFavorite(Meal meal) async {
+  var meals = await getAllFavouriteMeals();
+  var index = meals.indexWhere((element) => element.id == meal.id);
+  meals[index] = meal;
+  var encoded = meals.map((meal) => json.encode(meal.toJson()));
+  await writeMealsFav(encoded);
+  return true;
+}
+
+Future<bool> isMealFavourite(String id) async {
+  var meals = await getAllFavouriteMeals();
+  return meals.any((element) => element.id == id);
+}
+
 Future<bool> deleteMealsFavorites(String id) async {
   var meals = await getAllFavouriteMeals();
   meals.removeWhere((element) => element.id == id);
@@ -299,13 +356,10 @@ Future<bool> deleteMealsFavorites(String id) async {
   return true;
 }
 
-// Samstag Mittag
-// TODO: Edit Button Funktion hinzufügen auf Favourites checken
-
-// Samstag Abend
+// Dienstag
 // TODO: Turn categorie screnn and category meals screen into stateful widget --> refresh on delete meal // All Meal Screen Future Builder // Categorie screen Future Builder // Refresh wenn Bei Meal Erstellung ein Step gelöscht wird
 
-// Sonntag
+// Montag-Donnerstag
 // TODO: Bilder als relativer Pfad und hinzufügen Button und Jagdwurst Parser anpassen usw
 
 // Future

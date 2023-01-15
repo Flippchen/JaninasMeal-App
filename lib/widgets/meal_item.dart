@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:meal_app_flutter/dummy_data.dart';
+import 'package:meal_app_flutter/main.dart';
 import 'package:meal_app_flutter/models/meal.dart';
 import 'package:meal_app_flutter/screens/meal_detail.dart';
 
@@ -12,6 +13,7 @@ class MealItem extends StatelessWidget {
   final Function? callback;
   final List<String> categories, ingredients, steps;
   final Map<String, bool> filters;
+  final String? categoryTitle, categoryId;
 
   MealItem({
     required this.id,
@@ -24,6 +26,8 @@ class MealItem extends StatelessWidget {
     required this.steps,
     required this.categories,
     required this.filters,
+    this.categoryTitle,
+    this.categoryId,
     this.callback,
   });
 
@@ -42,9 +46,14 @@ class MealItem extends StatelessWidget {
       steps,
       categories,
       filters
-    ]).then((result) {
+    ]).then((result) async {
       if (result != null) {
-        callback!();
+        //if (categoryTitle != null && categoryId != null){
+        //  //var meals = await getAllMeals();
+        //  var map = {"title": categoryTitle!, "id": categoryId!,};// "meals": meals};
+        //  Navigator.pushReplacementNamed(context, "/category-meals",arguments: map);
+        //}
+
       }
       //if (result){
       //

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,18 +14,17 @@ import 'package:meal_app_flutter/widgets/main_drawer.dart';
 import '../dummy_data.dart';
 import '../models/meal.dart';
 
-class OnlineMealScreen extends StatefulWidget {
-  static const routeName = '/online-meal';
+class ExportMealScreen extends StatefulWidget {
+  static const routeName = '/export-meals';
 
-  OnlineMealScreen();
+  ExportMealScreen();
 
   @override
-  State<OnlineMealScreen> createState() => OnlineMealState();
+  State<ExportMealScreen> createState() => ExportMealState();
 }
 
-class OnlineMealState extends State<OnlineMealScreen> {
+class ExportMealState extends State<ExportMealScreen> {
   var inputText = TextEditingController();
-  List<Meal>? displayedMeals;
   @override
   void initState() {
     // ...
@@ -35,76 +35,48 @@ class OnlineMealState extends State<OnlineMealScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.send),
+        child: const Icon(Icons.save_alt_outlined),
         onPressed: () async {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
             behavior: SnackBarBehavior.floating,
             margin: EdgeInsets.fromLTRB(90, 0, 90, 30),
             duration: Duration(milliseconds: 1500),
-            content: Text("Erstelle Rezept..."),
+            content: Text("Sichere Rezepte..."),
           ));
-          Uri url;
-          List values;
-          try {
-            url = Uri.parse(inputText.text);
-            print("Parsing hat geklappt\nURL: ${url.toString()}");
-            try {
-              var meal = await getOnlineMeal(url);
-              if (meal.id != "ERROR") {
-                var all_meals = await getAllMeals();
-                print("meal erstellt");
-                values = await Navigator.push(context,
-                    MaterialPageRoute(builder: (context) {
-                  return AddMealsScreen(all_meals, meal);
-                }));
-                if (values[0]) {
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                    behavior: SnackBarBehavior.floating,
-                    margin: EdgeInsets.fromLTRB(90, 0, 90, 30),
-                    duration: Duration(milliseconds: 1500),
-                    content: Text("Rezept wurde hinzugefügt"),
-                  ));
-                  Meal created_meal = values[1];
-                  //List<String> cat =
-                  //    await getMealCategories(created_meal.categories);
-                  Navigator.of(context)
-                      .pushNamed(MealDetailScreen.routeName, arguments: [
-                    created_meal.id,
-                    setState(() {}),
-                    created_meal.affordability,
-                    created_meal.complexity,
-                    created_meal.duration,
-                    created_meal.imageUrl,
-                    created_meal.title,
-                    created_meal.ingredients,
-                    created_meal.steps,
-                    created_meal.categories,
-                    {
-                      'gluten': created_meal.isGlutenFree,
-                      'lactose': created_meal.isLactoseFree,
-                      'vegan': created_meal.isVegan,
-                      'vegetarian': created_meal.isVegetarian,
-                    },
-                  ]);
-                }
-              } else {
-                showAlertDialog(context, "Fehler",
-                    "Die Seite konnte nicht richtig geladen werden\nÜberprüfe deine Eingabe, deine Internetverbindung und versuche es erneut");
-              }
-            } catch (e) {
-              print("Fehler bei URl");
-              showAlertDialog(context, "Fehler",
-                  "Ein unbekannter Fehler ist beim abrufen der URL aufgetreten.\nÜberprüfe deine Eingabe, deine Internetverbindung und versuche es erneut");
+          var all_meals = await getAllMeals();
+          var encoded = all_meals.map((meal) => json.encode(meal.toJson()));
+          var FileName = "${inputText.text}.json";
+          var creation = await saveAllMeals(encoded, FileName);
+          if (creation) {
+            var alterdialog = AlertDialog(
+              title: const Text("Rezepte gespeichert"),
+              content:
+                  const Text("Die Rezepte wurden erfolgreich gespeichert."),
+              actions: [
+                TextButton(
+                  child: const Text("OK"),
+                  onPressed: () {
+                    Navigator.pop(context, true);
+                  },
+                )
+              ],
+            );
+            var dialog = await showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return alterdialog;
+                });
+            if (dialog) {
+              Navigator.pushReplacementNamed(context, "/");
             }
-          } catch (e) {
-            print("Url ungültig");
-            showAlertDialog(context, "URL ungültig",
-                "Die eingegebene URL ist ungültig.\n Bitte korrigiere die Eingabe und versuche es erneut");
+          } else {
+            await showAlertDialog(
+                context, "Fehler", "Es ist ein Fehler aufgetreten");
           }
         },
       ),
       appBar: AppBar(
-        title: const Text('Importiere online-Rezepte'),
+        title: const Text('Sichere alle Rezepte'),
       ),
       drawer: MainDrawer(),
       body: Column(
@@ -117,7 +89,7 @@ class OnlineMealState extends State<OnlineMealScreen> {
             children: [
               Container(
                 decoration: BoxDecoration(
-                  color: const Color(0xFF8bc34a),
+                  color: const Color(0xffd33e59),
                   border: Border.all(
                     color: Colors.black,
                     width: 3,
@@ -130,7 +102,7 @@ class OnlineMealState extends State<OnlineMealScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text(
-                      "Gib hier die URL von Zucker & Jagdwurst ein",
+                      "Name deiner Sicherungsdatei:",
                       style: TextStyle(
                           fontSize: 20,
                           color: Colors.black,
@@ -164,9 +136,8 @@ class OnlineMealState extends State<OnlineMealScreen> {
                             borderRadius:
                                 BorderRadius.all(Radius.circular(10.0)),
                           ),
-                          labelText: 'URL',
-                          hintText:
-                              'Bsp: https://www.zuckerundjagdwurst.de/rezepte/veganer-erdnussbutter-kuchen/',
+                          labelText: 'Dateiname',
+                          hintText: 'meineRezepte',
                         ),
                       ),
                     ),
@@ -192,19 +163,3 @@ class OnlineMealState extends State<OnlineMealScreen> {
     return cat;
   }
 }
-
-Meal ErrorMeal = const Meal(
-  id: "ERROR",
-  title: "Fehler",
-  imageUrl: "h",
-  categories: ["c12"],
-  duration: 0,
-  complexity: Complexity.simple,
-  affordability: Affordability.affordable,
-  ingredients: ["Fehler"],
-  steps: ["Fehler"],
-  isGlutenFree: false,
-  isLactoseFree: false,
-  isVegan: true,
-  isVegetarian: true,
-);

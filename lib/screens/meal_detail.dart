@@ -29,7 +29,7 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
   late final Affordability affordability;
   late final Complexity complexity;
   late final int duration;
-  late final String imageUrl;
+  late final String? imageUrl;
   late final String title;
   late final List<String> ingredients;
   late final List<String> steps;
@@ -120,10 +120,10 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
             SizedBox(
               height: 300,
               width: double.infinity,
-              child: Image.network(
-                selectedMeal.imageUrl,
+              child: selectedMeal.imageUrl != null? Image.network(
+                selectedMeal.imageUrl!,
                 fit: BoxFit.cover,
-              ),
+              ): const Text("No Network Image"),
             ),
             Container(
               color: const Color(0x426ec539),

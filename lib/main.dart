@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:meal_app_flutter/dummy_data.dart';
@@ -355,12 +356,22 @@ Future<bool> deleteMealsFavorites(String id) async {
   await writeMealsFav(encoded);
   return true;
 }
-
+saveImage(String id, Uint8List imagebytes) async {
+  final directory = await getApplicationDocumentsDirectory();
+  final file = File('${directory.path}/$id.jpg');
+  await file.writeAsBytes(imagebytes);
+}
+loadImage(String id) async {
+  final directory = await getApplicationDocumentsDirectory();
+  final file = File('${directory.path}/$id.jpg');
+  return file.readAsBytes();
+}
 // Dienstag
 // TODO: Turn categorie screnn and category meals screen into stateful widget --> refresh on delete meal // All Meal Screen Future Builder // Categorie screen Future Builder // Refresh wenn Bei Meal Erstellung ein Step gelöscht wird
 
 // Montag-Donnerstag
 // TODO: Bilder als relativer Pfad und hinzufügen Button und Jagdwurst Parser anpassen usw
+// TODO: File Explorer bei inportieren
 
 // Future
 // TODO: Startbild und Appbild --> Playestore

@@ -30,6 +30,7 @@ dependencies:
   shared_preferences: ^2.0.15
   material_design_icons_flutter: 6.0.7096
   html: ^0.15.1
+  image_picker: ^0.8.5+3
   flutter:
     sdk: flutter
 

@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:meal_app_flutter/alert_dialog.dart';
 import 'package:meal_app_flutter/main.dart';
 import 'package:meal_app_flutter/widgets/main_drawer.dart';
@@ -38,6 +40,7 @@ class AddMealsState extends State<AddMealsScreen> {
   var affordability = Affordability.affordable;
   var ingredients = TextEditingController();
   var steps = TextEditingController();
+  var mealId = "";
   var cards = <Card>[];
   List<String> stepsText = [];
   List<String> ingredientsText = [];
@@ -51,12 +54,19 @@ class AddMealsState extends State<AddMealsScreen> {
     "Vegan"
   ];
   List<String> selectedFilters = [];
+  var imagebytes = null;
+  final ImagePicker imgpicker = ImagePicker();
+  String imagepath = "";
+  late File imagefile;
 
   @override
   void initState() {
+    // ERROR means Add Mode
     if (widget.meal.id != "ERROR") {
+      // Bearbeitungsmodus
+      mealId = widget.meal.id;
       title.text = widget.meal.title;
-      imageUrl.text = widget.meal.imageUrl;
+      imageUrl.text = widget.meal.imageUrl!;
       duration.text = widget.meal.duration.toString();
       complexity = widget.meal.complexity;
       affordability = widget.meal.affordability;
@@ -78,7 +88,22 @@ class AddMealsState extends State<AddMealsScreen> {
     }
     super.initState();
   }
-
+  openImage() async {
+    try {
+      var pickedFile = await imgpicker.pickImage(source: ImageSource.gallery);
+      //you can use ImageCourse.camera for Camera capture
+      if (pickedFile != null) {
+        imagepath = pickedFile.path;
+        imagefile = File(imagepath);
+        imagebytes = imagefile.readAsBytesSync();
+        setState(() {});
+      } else {
+        print("No image is selected.");
+      }
+    } catch (e) {
+      showAlertDialog(context, "Error while loading image", "Exception: $e");
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -99,9 +124,9 @@ class AddMealsState extends State<AddMealsScreen> {
           var favCreation = false;
           try {
             meal = Meal(
-              id: imageUrl.text.hashCode.toString(),
+              id: mealId == "" ? title.text.hashCode.toString() :mealId , //TODO: Id must be consistent
               title: title.text,
-              imageUrl: imageUrl.text,
+              imageUrl: imageUrl.text == "" ? null : imageUrl.text,
               duration: int.parse(duration.text),
               complexity: complexity,
               affordability: affordability,
@@ -116,7 +141,6 @@ class AddMealsState extends State<AddMealsScreen> {
                   selectedFilters.contains("Vegetarisch") ? true : false,
               categories: selectedCategories,
             );
-            // TODO: Fix logic error and check if meal is in favourites
             var meals = await getAllMeals();
             bool fav = await isMealFavourite(meal.id);
             //var meals = widget.availableMeals;
@@ -130,10 +154,19 @@ class AddMealsState extends State<AddMealsScreen> {
                 ? print("Meal already exists")
                 : print("Meal does not exist");
             if (!mealIds.contains(widget.meal.id)) {
+
               print("Creating meal");
               print(meal.toJson().toString());
               creation = await addMeals(meal);
               print("Meal is favourite $fav");
+              if (meal.imageUrl != null && imagebytes != null) {
+                creation = false;
+                await showAlertDialog(context, "Fehler", "Es dürfen nicht zwei Bilder ausgewählt werden.");
+              }
+              else if (meal.imageUrl == null) {
+                await saveImage(meal.id, imagebytes);
+                print("Image saved");
+              }
               if (fav) {
                 favCreation = await addMealsFavorite(meal);
                 creation = creation && favCreation;
@@ -142,6 +175,14 @@ class AddMealsState extends State<AddMealsScreen> {
               print("Added Meal");
             } else {
               creation = await updateMeals(meal);
+              if (imageUrl.text != null && imagebytes != null) {
+                creation = false;
+                await showAlertDialog(context, "Fehler", "Es dürfen nicht zwei Bilder ausgewählt werden.");
+              }
+              else if (meal.imageUrl == null) {
+                await saveImage(meal.id, imagebytes);
+                print("Image saved");
+              }
               if (fav) {
                 favCreation = await updateMealsFavorite(meal);
                 creation = creation && favCreation;
@@ -210,6 +251,51 @@ class AddMealsState extends State<AddMealsScreen> {
           children: [
             const SizedBox(
               height: 5,
+            ),
+            Container(
+              margin: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("Füge ein Bild hinzu",
+                          style: GoogleFonts.roboto(
+                              fontSize: 23, fontWeight: FontWeight.normal)),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        height: 300,
+                        child: imagebytes == null
+                              ? const Icon(Icons.image)
+                              : Image.memory(imagebytes, fit: BoxFit.cover),
+                        ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          openImage();
+                        },
+                        child: imagebytes == null
+                            ? Text("Pick Image")
+                            : Text("Change Image"),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
             Container(
               margin: const EdgeInsets.all(10),
@@ -592,6 +678,8 @@ class AddMealsState extends State<AddMealsScreen> {
     }
     return cat;
   }
+
+
 }
 
 class SOF extends StatefulWidget {
@@ -821,3 +909,4 @@ class _SOF2State extends State<SOF2> {
     );
   }
 }
+

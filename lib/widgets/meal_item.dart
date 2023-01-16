@@ -6,7 +6,8 @@ import 'package:meal_app_flutter/models/meal.dart';
 import 'package:meal_app_flutter/screens/meal_detail.dart';
 
 class MealItem extends StatelessWidget {
-  final String id, title, imageUrl;
+  final String id, title;
+  final String? imageUrl;
   final int duration;
   final Complexity complexity;
   final Affordability affordability;
@@ -121,12 +122,12 @@ class MealItem extends StatelessWidget {
                     topLeft: Radius.circular(15),
                     topRight: Radius.circular(15),
                   ),
-                  child: Image.network(
-                    imageUrl,
+                  child: imageUrl != null? Image.network(
+                    imageUrl!,
                     height: 250,
                     width: double.infinity,
                     fit: BoxFit.cover,
-                  ),
+                  ): Text("No Network Image"),
                 ),
                 Positioned(
                   bottom: 20,

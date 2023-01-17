@@ -5,7 +5,7 @@ import 'package:meal_app_flutter/main.dart';
 import 'package:meal_app_flutter/models/meal.dart';
 import 'package:meal_app_flutter/screens/meal_detail.dart';
 
-class MealItem extends StatelessWidget {
+class MealItem extends StatefulWidget {
   final String id, title;
   final String? imageUrl;
   final int duration;
@@ -32,29 +32,40 @@ class MealItem extends StatelessWidget {
     this.callback,
   });
 
+  @override
+  State<MealItem> createState() => _MealItemState();
+}
+
+class _MealItemState extends State<MealItem> {
+  var imagebytes = null;
   Future<bool> selectMeal(BuildContext context) async {
     //List<String> cat = await getMealCategories(categories);
 
     Navigator.of(context).pushNamed(MealDetailScreen.routeName, arguments: [
-      id,
-      callback,
-      affordability,
-      complexity,
-      duration,
-      imageUrl,
-      title,
-      ingredients,
-      steps,
-      categories,
-      filters
+      widget.id,
+      widget.callback,
+      widget.affordability,
+      widget.complexity,
+      widget.duration,
+      widget.imageUrl,
+      widget.title,
+      widget.ingredients,
+      widget.steps,
+      widget.categories,
+      widget.filters
     ]).then((result) async {
       if (result != null) {
-        //if (categoryTitle != null && categoryId != null){
-        //  //var meals = await getAllMeals();
-        //  var map = {"title": categoryTitle!, "id": categoryId!,};// "meals": meals};
-        //  Navigator.pushReplacementNamed(context, "/category-meals",arguments: map);
-        //}
-
+        if (widget.categoryTitle != null && widget.categoryId != null) {
+          //var meals = await getAllMeals();
+          var map = {
+            "title": widget.categoryTitle!,
+            "id": widget.categoryId!,
+          }; // "meals": meals};
+          Navigator.pushReplacementNamed(context, "/category-meals",
+              arguments: map);
+        } else {
+          Navigator.pushReplacementNamed(context, "/all-meals");
+        }
       }
       //if (result){
       //
@@ -64,7 +75,7 @@ class MealItem extends StatelessWidget {
   }
 
   String get complexityText {
-    switch (complexity) {
+    switch (widget.complexity) {
       case Complexity.simple:
         return 'Einfach';
         // ignore: dead_code
@@ -82,8 +93,15 @@ class MealItem extends StatelessWidget {
     }
   }
 
+  loadImagebytes(String mealId) async {
+    var image = await loadImage(mealId);
+    setState(() {
+      imagebytes = image;
+    });
+  }
+
   String get affordabilityText {
-    switch (affordability) {
+    switch (widget.affordability) {
       case Affordability.affordable:
         return 'Günstig';
         // ignore: dead_code
@@ -99,6 +117,14 @@ class MealItem extends StatelessWidget {
       default:
         return 'Unbekannt';
     }
+  }
+
+  @override
+  void initState() {
+    if (widget.imageUrl == null) {
+      loadImagebytes(widget.id);
+    }
+    super.initState();
   }
 
   @override
@@ -122,12 +148,17 @@ class MealItem extends StatelessWidget {
                     topLeft: Radius.circular(15),
                     topRight: Radius.circular(15),
                   ),
-                  child: imageUrl != null? Image.network(
-                    imageUrl!,
-                    height: 250,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  ): Text("No Network Image"),
+                  child: widget.imageUrl != null
+                      ? Image.network(
+                          widget.imageUrl!,
+                          height: 250,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                        )
+                      : imagebytes != null
+                          ? Image.memory(imagebytes)
+                          : const Icon(
+                              Icons.image), //TODO: Await Image from File
                 ),
                 Positioned(
                   bottom: 20,
@@ -137,7 +168,7 @@ class MealItem extends StatelessWidget {
                     color: Colors.black54,
                     padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
                     child: Text(
-                      title,
+                      widget.title,
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 25,
@@ -160,7 +191,7 @@ class MealItem extends StatelessWidget {
                       const SizedBox(
                         width: 6,
                       ),
-                      Text('$duration min'),
+                      Text('${widget.duration} min'),
                     ],
                   ),
                   Row(

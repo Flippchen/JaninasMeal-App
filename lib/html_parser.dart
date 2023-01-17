@@ -83,7 +83,8 @@ Future<Meal> getOnlineMeal(Uri url) async {
     num randomNumber = random.nextInt(50000);
     final Meal meal = Meal(
       id: imageString != ""
-          ? title.hashCode.toString(): imageString.hashCode.toString(),
+          ? title.hashCode.toString()
+          : imageString.hashCode.toString(),
       title: title,
       imageUrl: imageString != ""
           ? imageString

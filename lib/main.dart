@@ -153,8 +153,7 @@ class _MyAppState extends State<MyApp> {
       //home: CategoriesScreen(),
       routes: {
         '/': (context) => TabsScreen(),
-        CategoryMealsScreen.routeName: (context) =>
-            CategoryMealsScreen(_availableMeals),
+        CategoryMealsScreen.routeName: (context) => CategoryMealsScreen(),
         MealDetailScreen.routeName: (context) => MealDetailScreen(
             toggleFavourite: _toggledFavourite, isFavourite: _isMealFavourite),
         FiltersScreen.routeName: (context) =>
@@ -356,23 +355,31 @@ Future<bool> deleteMealsFavorites(String id) async {
   await writeMealsFav(encoded);
   return true;
 }
+
 saveImage(String id, Uint8List imagebytes) async {
   final directory = await getApplicationDocumentsDirectory();
-  final file = File('${directory.path}/$id.jpg');
+  print("Path: ${directory.path}");
+  var file = File('${directory.path}/$id.jpg');
+  if (await file.exists()) {
+    await file.delete();
+  }
   await file.writeAsBytes(imagebytes);
 }
+
 loadImage(String id) async {
   final directory = await getApplicationDocumentsDirectory();
   final file = File('${directory.path}/$id.jpg');
-  return file.readAsBytes();
+  print("Image loaded: ${file.path}");
+  return await file.readAsBytes();
 }
 // Dienstag
 // TODO: Turn categorie screnn and category meals screen into stateful widget --> refresh on delete meal // All Meal Screen Future Builder // Categorie screen Future Builder // Refresh wenn Bei Meal Erstellung ein Step gelöscht wird
+// TODO: Wenn man kategorie refresht, verlässt und wieder joined dann sind meals wieder nicht aktualisiert xD
 
-// Montag-Donnerstag
+// Mittwoch
 // TODO: Bilder als relativer Pfad und hinzufügen Button und Jagdwurst Parser anpassen usw
 // TODO: File Explorer bei inportieren
-
+// TODO: Bearbeitenscreen soll Bild laden und löschen
 // Future
 // TODO: Startbild und Appbild --> Playestore
 // TODO: Rezeptgröße auf Personen anpassen und Angabe Rezept Anzahl Personen

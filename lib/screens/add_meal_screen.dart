@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:meal_app_flutter/alert_dialog.dart';
@@ -66,7 +67,7 @@ class AddMealsState extends State<AddMealsScreen> {
       // Bearbeitungsmodus
       mealId = widget.meal.id;
       title.text = widget.meal.title;
-      imageUrl.text = widget.meal.imageUrl!;
+      imageUrl.text = widget.meal.imageUrl ?? "";
       duration.text = widget.meal.duration.toString();
       complexity = widget.meal.complexity;
       affordability = widget.meal.affordability;
@@ -86,8 +87,19 @@ class AddMealsState extends State<AddMealsScreen> {
         selectedFilters.add("Vegan");
       }
     }
+    if (imageUrl.text == "") {
+      loadImagebytes(mealId);
+    }
     super.initState();
   }
+
+  loadImagebytes(String mealId) async {
+    var image = await loadImage(mealId);
+    setState(() {
+      imagebytes = image;
+    });
+  }
+
   openImage() async {
     try {
       var pickedFile = await imgpicker.pickImage(source: ImageSource.gallery);
@@ -104,6 +116,7 @@ class AddMealsState extends State<AddMealsScreen> {
       showAlertDialog(context, "Error while loading image", "Exception: $e");
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -124,7 +137,9 @@ class AddMealsState extends State<AddMealsScreen> {
           var favCreation = false;
           try {
             meal = Meal(
-              id: mealId == "" ? title.text.hashCode.toString() :mealId , //TODO: Id must be consistent
+              id: mealId == ""
+                  ? title.text.hashCode.toString()
+                  : mealId, //TODO: Id must be consistent
               title: title.text,
               imageUrl: imageUrl.text == "" ? null : imageUrl.text,
               duration: int.parse(duration.text),
@@ -161,9 +176,12 @@ class AddMealsState extends State<AddMealsScreen> {
               print("Meal is favourite $fav");
               if (meal.imageUrl != null && imagebytes != null) {
                 creation = false;
-                await showAlertDialog(context, "Fehler", "Es dürfen nicht zwei Bilder ausgewählt werden.");
-              }
-              else if (meal.imageUrl == null) {
+                await showAlertDialog(context, "Fehler",
+                    "Es dürfen nicht zwei Bilder ausgewählt werden.");
+              }else if(meal.imageUrl == null && imagebytes == null){
+                var stockImage = await getStandartImage();
+                await saveImage(meal.id, stockImage);
+              } else if (meal.imageUrl == null && imagebytes != null) {
                 await saveImage(meal.id, imagebytes);
                 print("Image saved");
               }
@@ -175,11 +193,11 @@ class AddMealsState extends State<AddMealsScreen> {
               print("Added Meal");
             } else {
               creation = await updateMeals(meal);
-              if (imageUrl.text != null && imagebytes != null) {
+              if (meal.imageUrl != null && imagebytes != null) {
                 creation = false;
-                await showAlertDialog(context, "Fehler", "Es dürfen nicht zwei Bilder ausgewählt werden.");
-              }
-              else if (meal.imageUrl == null) {
+                await showAlertDialog(context, "Fehler",
+                    "Es dürfen nicht zwei Bilder ausgewählt werden.");
+              } else if (meal.imageUrl == null) {
                 await saveImage(meal.id, imagebytes);
                 print("Image saved");
               }
@@ -193,6 +211,7 @@ class AddMealsState extends State<AddMealsScreen> {
           } catch (e) {
             creation = false;
             favCreation = false;
+            print("Exception: $e");
             print("Error, creation false");
           }
 
@@ -256,7 +275,8 @@ class AddMealsState extends State<AddMealsScreen> {
               margin: const EdgeInsets.all(10),
               padding: const EdgeInsets.all(15),
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),),
+                borderRadius: BorderRadius.circular(20),
+              ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -275,10 +295,16 @@ class AddMealsState extends State<AddMealsScreen> {
                       Container(
                         width: MediaQuery.of(context).size.width * 0.8,
                         height: 300,
-                        child: imagebytes == null
-                              ? const Icon(Icons.image)
-                              : Image.memory(imagebytes, fit: BoxFit.cover),
-                        ),
+                        child: imageUrl.text == ""
+                            ? imagebytes != null
+                                ? Image.memory(imagebytes, fit: BoxFit.cover)
+                                : widget.meal.id != "ERROR"
+                                    ? const Center(
+                                        child: CircularProgressIndicator())
+                                    : const Center(child: Icon(Icons.image))
+                            : Image.network(
+                                imageUrl.text), //const Icon(Icons.image),
+                      ),
                     ],
                   ),
                   Row(
@@ -679,7 +705,10 @@ class AddMealsState extends State<AddMealsScreen> {
     return cat;
   }
 
-
+  getStandartImage() async{
+    var helper = await rootBundle.load('assets/icon.png');
+    return helper.buffer.asUint8List();
+  }
 }
 
 class SOF extends StatefulWidget {
@@ -909,4 +938,3 @@ class _SOF2State extends State<SOF2> {
     );
   }
 }
-

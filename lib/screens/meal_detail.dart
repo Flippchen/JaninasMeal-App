@@ -120,10 +120,13 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
             SizedBox(
               height: 300,
               width: double.infinity,
-              child: selectedMeal.imageUrl != null? Image.network(
-                selectedMeal.imageUrl!,
-                fit: BoxFit.cover,
-              ): const Text("No Network Image"),
+              child: selectedMeal.imageUrl != null
+                  ? Image.network(
+                      selectedMeal.imageUrl!,
+                      fit: BoxFit.cover,
+                    )
+                  : const Text(
+                      "No Network Image"), //TODO: Await Image from File // Brainfuck!!
             ),
             Container(
               color: const Color(0x426ec539),

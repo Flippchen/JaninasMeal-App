@@ -38,6 +38,15 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
   //print(categories.toString());
   late final Map filters;
   late Meal selectedMeal;
+  var imageBytes;
+
+  loadImagebytes(String mealId) async {
+    var image = await loadImage(mealId);
+    setState(() {
+      imageBytes = image;
+    });
+  }
+
   Widget buildSectionTitle(String text, BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
@@ -98,6 +107,9 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
           isVegan: filters['vegan'],
           isVegetarian: filters['vegetarian'],
         );
+        if (imageUrl == null) {
+          loadImagebytes(mealId);
+        }
         isInit = true;
       });
     }
@@ -125,8 +137,10 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
                       selectedMeal.imageUrl!,
                       fit: BoxFit.cover,
                     )
-                  : const Text(
-                      "No Network Image"), //TODO: Await Image from File // Brainfuck!!
+                  : imageBytes != null
+                      ? Image.memory(imageBytes)
+                      : const Text(
+                          "No Network Image"), //TODO: Await Image from File // Brainfuck!!
             ),
             Container(
               color: const Color(0x426ec539),

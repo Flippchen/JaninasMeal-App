@@ -188,7 +188,7 @@ class _MealItemState extends State<MealItem> {
                   Row(
                     children: [
                       const Icon(Icons.schedule),
-                      const SizedBox(
+                      SizedBox(
                         width: 6,
                       ),
                       Text('${widget.duration} min'),

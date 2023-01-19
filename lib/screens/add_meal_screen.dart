@@ -169,7 +169,6 @@ class AddMealsState extends State<AddMealsScreen> {
                 ? print("Meal already exists")
                 : print("Meal does not exist");
             if (!mealIds.contains(widget.meal.id)) {
-
               print("Creating meal");
               print(meal.toJson().toString());
               creation = await addMeals(meal);
@@ -178,7 +177,7 @@ class AddMealsState extends State<AddMealsScreen> {
                 creation = false;
                 await showAlertDialog(context, "Fehler",
                     "Es dürfen nicht zwei Bilder ausgewählt werden.");
-              }else if(meal.imageUrl == null && imagebytes == null){
+              } else if (meal.imageUrl == null && imagebytes == null) {
                 var stockImage = await getStandartImage();
                 await saveImage(meal.id, stockImage);
               } else if (meal.imageUrl == null && imagebytes != null) {
@@ -289,21 +288,28 @@ class AddMealsState extends State<AddMealsScreen> {
                               fontSize: 23, fontWeight: FontWeight.normal)),
                     ],
                   ),
+                  SizedBox(
+                    height: 10,
+                  ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                        width: MediaQuery.of(context).size.width * 0.8,
-                        height: 300,
+                        width: MediaQuery.of(context).size.width * 0.85,
+                        height: 200,
                         child: imageUrl.text == ""
                             ? imagebytes != null
-                                ? Image.memory(imagebytes, fit: BoxFit.cover)
+                                ? Image.memory(
+                                    imagebytes,
+                                    fit: BoxFit.fill,
+                                  )
                                 : widget.meal.id != "ERROR"
                                     ? const Center(
                                         child: CircularProgressIndicator())
                                     : const Center(child: Icon(Icons.image))
                             : Image.network(
-                                imageUrl.text), //const Icon(Icons.image),
+                                imageUrl.text,
+                                fit: BoxFit.fill,
+                              ), //const Icon(Icons.image),
                       ),
                     ],
                   ),
@@ -315,8 +321,26 @@ class AddMealsState extends State<AddMealsScreen> {
                           openImage();
                         },
                         child: imagebytes == null
-                            ? Text("Pick Image")
-                            : Text("Change Image"),
+                            ? Text("Bild hinzufügen")
+                            : Text("Bild ändern"),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      SizedBox(
+                        child: imagebytes != null
+                            ? ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.red,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    imagebytes = null;
+                                  });
+                                },
+                                child: Text("Bild entfernen"),
+                              )
+                            : Container(),
                       ),
                     ],
                   ),
@@ -355,23 +379,27 @@ class AddMealsState extends State<AddMealsScreen> {
                 style: GoogleFonts.roboto(
                     fontSize: 23, fontWeight: FontWeight.normal)),
             const SizedBox(
-              height: 5,
+              height: 15,
             ),
-            ElevatedButton(
-              child: stepsText.length > 0
-                  ? const Text('Ändere oder lösche Schritte')
-                  : const Text('Füge deinem Rezept die nötigen Schritte hinzu'),
-              onPressed: () async {
-                stepsText = await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SOF(stepsText),
-                  ),
-                );
-                if (stepsText != null) stepsText.forEach(print);
-                setState(() {});
-              },
+            Container(
+              width: MediaQuery.of(context).size.width * 0.7,
+              child: ElevatedButton(
+                child: stepsText.length > 0
+                    ? const Text('Ändere oder lösche Schritte')
+                    : const Text('Füge deinem Rezept Schritte hinzu'),
+                onPressed: () async {
+                  stepsText = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SOF(stepsText),
+                    ),
+                  );
+                  if (stepsText != null) stepsText.forEach(print);
+                  setState(() {});
+                },
+              ),
             ),
+
             Container(
               decoration: BoxDecoration(
                 border: Border.all(
@@ -412,26 +440,35 @@ class AddMealsState extends State<AddMealsScreen> {
                     )
                   : Text("Noch keine Schritte hinzugefügt"),
             ),
+            SizedBox(
+              height: 10,
+            ),
             Text("Zutaten",
                 style: GoogleFonts.roboto(
                     fontSize: 23, fontWeight: FontWeight.normal)),
             const SizedBox(
-              height: 5,
+              height: 15,
             ),
-            ElevatedButton(
-              child: ingredientsText.length > 0
-                  ? const Text('Ändere oder lösche Zutaten')
-                  : const Text('Füge deinem Rezept die nötigen Zutaten hinzu'),
-              onPressed: () async {
-                ingredientsText = await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SOF2(ingredientsText),
-                  ),
-                );
-                if (ingredientsText != null) ingredientsText.forEach(print);
-                setState(() {});
-              },
+            Container(
+              width: MediaQuery.of(context).size.width * 0.7,
+              child: ElevatedButton(
+                child: ingredientsText.length > 0
+                    ? const Text('Ändere oder lösche Zutaten')
+                    : const Text('Füge deinem Rezept Zutaten hinzu'),
+                onPressed: () async {
+                  ingredientsText = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SOF2(ingredientsText),
+                    ),
+                  );
+                  if (ingredientsText != null) ingredientsText.forEach(print);
+                  setState(() {});
+                },
+              ),
+            ),
+            SizedBox(
+              height: 10,
             ),
             Container(
               decoration: BoxDecoration(
@@ -474,26 +511,26 @@ class AddMealsState extends State<AddMealsScreen> {
                   : const Text("Noch keine Zutaten hinzugefügt"),
             ),
             const SizedBox(
-              height: 10,
+              height: 20,
             ),
             // A DropdownButton for the complexity
             Row(
               children: [
                 Row(
                   children: [
-                    const SizedBox(
-                      width: 10,
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.02,
                     ),
                     Text(
-                      "Schwierigkeit des Rezepts:",
+                      "Schwierigkeit:",
                       style: GoogleFonts.lato(
                           textStyle: const TextStyle(
                               color: Colors.black,
                               fontSize: 20,
                               fontWeight: FontWeight.normal)),
                     ),
-                    const SizedBox(
-                      width: 10,
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.1,
                     ),
                     DropdownButton<Complexity>(
                       value: complexity,
@@ -517,19 +554,19 @@ class AddMealsState extends State<AddMealsScreen> {
             ),
             Row(
               children: [
-                const SizedBox(
-                  width: 10,
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.02,
                 ),
                 Text(
-                  "Preis des Rezepts:",
+                  "Preis:",
                   style: GoogleFonts.lato(
                       textStyle: const TextStyle(
                           color: Colors.black,
                           fontSize: 20,
                           fontWeight: FontWeight.normal)),
                 ),
-                const SizedBox(
-                  width: 100,
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.28,
                 ),
                 DropdownButton<Affordability>(
                   value: affordability,
@@ -557,7 +594,7 @@ class AddMealsState extends State<AddMealsScreen> {
               style: TextStyle(fontSize: 23, fontWeight: FontWeight.normal),
             ),
             const SizedBox(
-              height: 10,
+              height: 25,
             ),
             Container(
               decoration: BoxDecoration(
@@ -566,7 +603,7 @@ class AddMealsState extends State<AddMealsScreen> {
                   width: 1,
                 ),
               ),
-              width: 360,
+              width: MediaQuery.of(context).size.width * 0.9,
               height: 300,
               child: Card(
                 child: ListView.builder(
@@ -599,14 +636,14 @@ class AddMealsState extends State<AddMealsScreen> {
               ),
             ),
             const SizedBox(
-              height: 20,
+              height: 30,
             ),
             const Text(
               "Wähle die passenden Filter aus:",
               style: TextStyle(fontSize: 23, fontWeight: FontWeight.normal),
             ),
             const SizedBox(
-              height: 10,
+              height: 25,
             ),
             Container(
               decoration: BoxDecoration(
@@ -615,7 +652,7 @@ class AddMealsState extends State<AddMealsScreen> {
                   width: 1,
                 ),
               ),
-              width: 360,
+              width: MediaQuery.of(context).size.width * 0.9,
               height: 220,
               child: Card(
                 child: ListView.builder(
@@ -705,8 +742,8 @@ class AddMealsState extends State<AddMealsScreen> {
     return cat;
   }
 
-  getStandartImage() async{
-    var helper = await rootBundle.load('assets/icon.png');
+  getStandartImage() async {
+    var helper = await rootBundle.load('assets/stockimage.png');
     return helper.buffer.asUint8List();
   }
 }

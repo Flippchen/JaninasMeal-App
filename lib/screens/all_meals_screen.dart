@@ -77,15 +77,16 @@ class AllMealsState extends State<AllMealsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.refresh),
-        onPressed: () async {
-          var displayedMealsNew = await getAllMeals();
-          setState(() {
-            displayedMeals = displayedMealsNew;
-          });
-        },
-      ),
+      //floatingActionButton: FloatingActionButton(
+      //  backgroundColor: Theme.of(context).colorScheme.primary,
+      //  child: const Icon(Icons.refresh),
+      //  onPressed: () async {
+      //    var displayedMealsNew = await getAllMeals();
+      //    setState(() {
+      //      displayedMeals = displayedMealsNew;
+      //    });
+      //  },
+      //),
       appBar: AppBar(
         title: const Text('Alle Mahlzeiten'),
       ),

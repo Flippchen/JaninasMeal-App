@@ -47,7 +47,7 @@ class MainDrawer extends StatelessWidget {
             ),
           ),
           SizedBox(
-            height: 20,
+            height: MediaQuery.of(context).size.height * 0.01,
           ),
           buildListTile(
             'Alle Rezepte',
@@ -77,8 +77,10 @@ class MainDrawer extends StatelessWidget {
               Navigator.of(context).pushReplacementNamed('/online-meal');
             },
           ),
-          const SizedBox(
-            height: 350,
+          Expanded(
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height * 0.35,
+            ),
           ),
           buildListTile(
             'Importieren',

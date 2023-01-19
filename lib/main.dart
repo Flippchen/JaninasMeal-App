@@ -16,7 +16,8 @@ import 'package:meal_app_flutter/screens/category_screen.dart';
 import 'package:meal_app_flutter/screens/filters_screen.dart';
 import 'package:meal_app_flutter/screens/meal_detail.dart';
 import 'package:meal_app_flutter/screens/tabs_screen.dart';
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter/services.dart'
+    show SystemChrome, SystemUiMode, rootBundle;
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
@@ -40,6 +41,7 @@ class _MyAppState extends State<MyApp> {
   @override
   initState() {
     super.initState();
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
     helper();
   }
 
@@ -211,9 +213,7 @@ Future<bool> writeAllMeals(Iterable<String> objects) async {
 }
 
 Future<bool> loadAllSavedMeals(String name) async {
-  final dir = await getExternalStorageDirectory();
-  var path = dir?.path;
-  var file = await File('$path/$name');
+  var file = File(name);
   var contents = await file.readAsString();
   List<Meal> mealsList = [];
   var decoded = json.decode(contents);
@@ -357,8 +357,8 @@ Future<bool> deleteMealsFavorites(String id) async {
 }
 
 saveImage(String id, Uint8List imagebytes) async {
-  final directory = await getApplicationDocumentsDirectory();
-  print("Path: ${directory.path}");
+  final directory = await getExternalStorageDirectory();
+  print("Path: ${directory!.path}");
   var file = File('${directory.path}/$id.jpg');
   if (await file.exists()) {
     await file.delete();
@@ -367,19 +367,20 @@ saveImage(String id, Uint8List imagebytes) async {
 }
 
 loadImage(String id) async {
-  final directory = await getApplicationDocumentsDirectory();
-  final file = File('${directory.path}/$id.jpg');
+  final directory = await getExternalStorageDirectory();
+  final file = File('${directory?.path}/$id.jpg');
   print("Image loaded: ${file.path}");
   return await file.readAsBytes();
 }
-// Dienstag
-// TODO: Turn categorie screnn and category meals screen into stateful widget --> refresh on delete meal // All Meal Screen Future Builder // Categorie screen Future Builder // Refresh wenn Bei Meal Erstellung ein Step gelöscht wird
-// TODO: Wenn man kategorie refresht, verlässt und wieder joined dann sind meals wieder nicht aktualisiert xD
 
-// Mittwoch
-// TODO: Bilder als relativer Pfad und hinzufügen Button und Jagdwurst Parser anpassen usw
+// Donnerstag:
+//TODO: Alle Meals sollen leer sein
+// TODO: Bilder auf anderen Pfad speichern
+
+// Near future:
+// FIXME: Bilder als relativer Pfad und hinzufügen Button und Jagdwurst Parser anpassen usw
 // TODO: File Explorer bei inportieren
-// TODO: Bearbeitenscreen soll Bild laden und löschen
+
 // Future
 // TODO: Startbild und Appbild --> Playestore
 // TODO: Rezeptgröße auf Personen anpassen und Angabe Rezept Anzahl Personen

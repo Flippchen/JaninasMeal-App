@@ -113,13 +113,13 @@ class _CategoryMealsScreenState extends State<CategoryMealsScreen> {
         appBar: AppBar(
           title: Text(categoryTitle!),
         ),
-        floatingActionButton: FloatingActionButton(
-          child: const Icon(Icons.refresh),
-          onPressed: () async {
-            var displayedMealsNew = await getAllMeals();
-            updateMeals(displayedMealsNew);
-          },
-        ),
+        //floatingActionButton: FloatingActionButton(
+        //  child: const Icon(Icons.refresh),
+        //  onPressed: () async {
+        //    var displayedMealsNew = await getAllMeals();
+        //    updateMeals(displayedMealsNew);
+        //  },
+        //),
         body: FutureBuilder(
             future: getAllDisplayMeals(),
             builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {

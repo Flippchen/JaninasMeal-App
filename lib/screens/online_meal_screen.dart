@@ -35,6 +35,7 @@ class OnlineMealState extends State<OnlineMealScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Theme.of(context).colorScheme.primary,
         child: Icon(Icons.send),
         onPressed: () async {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -109,8 +110,10 @@ class OnlineMealState extends State<OnlineMealScreen> {
       drawer: MainDrawer(),
       body: Column(
         children: [
-          const SizedBox(
-            height: 300,
+          Expanded(
+            child: SizedBox(
+              height: 300,
+            ),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -124,8 +127,8 @@ class OnlineMealState extends State<OnlineMealScreen> {
                   ),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                width: 400,
-                height: 170,
+                width: MediaQuery.of(context).size.width * 0.97,
+                height: MediaQuery.of(context).size.height * 0.25,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -136,12 +139,12 @@ class OnlineMealState extends State<OnlineMealScreen> {
                           color: Colors.black,
                           fontWeight: FontWeight.normal),
                     ),
-                    const SizedBox(
-                      height: 10,
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.03,
                     ),
                     Container(
-                      height: 100,
-                      width: 400,
+                      height: MediaQuery.of(context).size.height * 0.1,
+                      width: MediaQuery.of(context).size.width * 0.9,
                       padding: const EdgeInsets.all(20),
                       child: TextField(
                         controller: inputText,
@@ -174,7 +177,11 @@ class OnlineMealState extends State<OnlineMealScreen> {
                 ),
               ),
             ],
-          )
+          ),
+          Expanded(
+              child: SizedBox(
+            height: 300,
+          )),
         ],
       ),
     );

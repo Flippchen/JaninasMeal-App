@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
-
+import 'package:filesystem_picker/filesystem_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:meal_app_flutter/alert_dialog.dart';
 import 'package:meal_app_flutter/html_parser.dart';
 import 'package:meal_app_flutter/main.dart';
@@ -10,7 +11,7 @@ import 'package:meal_app_flutter/screens/add_meal_screen.dart';
 import 'package:meal_app_flutter/screens/meal_detail.dart';
 import 'package:meal_app_flutter/screens/category_screen.dart';
 import 'package:meal_app_flutter/widgets/main_drawer.dart';
-
+import 'package:path_provider/path_provider.dart';
 import '../dummy_data.dart';
 import '../models/meal.dart';
 
@@ -34,130 +35,101 @@ class ImportMealState extends State<ImportMealScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.upload),
-        onPressed: () async {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            behavior: SnackBarBehavior.floating,
-            margin: EdgeInsets.fromLTRB(90, 0, 90, 30),
-            duration: Duration(milliseconds: 1500),
-            content: Text("Importiere Rezepte..."),
-          ));
-          var fileName = "${inputText.text}.json";
-          var creation = await loadAllSavedMeals(fileName);
-
-          if (creation) {
-            var alterdialog = AlertDialog(
-              title: const Text("Rezepte erfolgreich geladen"),
-              content: const Text("Die Rezepte wurden erfolgreich geladen."),
-              actions: [
-                TextButton(
-                  child: const Text("OK"),
-                  onPressed: () {
-                    Navigator.pop(context, true);
-                  },
-                )
-              ],
-            );
-            var dialog = await showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return alterdialog;
-                });
-            if (dialog) {
-              Navigator.pushReplacementNamed(context, "/");
-            }
-          } else {
-            await showAlertDialog(
-                context, "Fehler", "Es ist ein Fehler aufgetreten");
-          }
-        },
-      ),
       appBar: AppBar(
         title: const Text('Lade alle Rezepte'),
       ),
       drawer: MainDrawer(),
       body: Column(
         children: [
-          const SizedBox(
-            height: 300,
+          Expanded(
+              child: SizedBox(
+            height: 50,
+          )),
+          Text(
+            "Drücke den Knopf, um Rezepte zu importieren!",
+            style:
+                GoogleFonts.roboto(fontSize: 30, fontWeight: FontWeight.normal),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: const Color(0xff439180),
-                  border: Border.all(
-                    color: Colors.black,
-                    width: 3,
-                  ),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                width: 400,
-                height: 170,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      "Name deiner Sicherungsdatei:",
-                      style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.black,
-                          fontWeight: FontWeight.normal),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                      height: 100,
-                      width: 400,
-                      padding: const EdgeInsets.all(20),
-                      child: TextField(
-                        controller: inputText,
-                        decoration: const InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.black, width: 2.0),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.black, width: 2.0),
-                          ),
-                          fillColor: Colors.white,
-                          filled: true,
-                          hintStyle:
-                              TextStyle(color: Colors.black, fontSize: 13),
-                          labelStyle:
-                              TextStyle(color: Colors.black, fontSize: 20),
-                          border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                          ),
-                          labelText: 'Dateiname',
-                          hintText: 'meineRezepte',
-                        ),
-                      ),
-                    ),
-                  ],
+          SizedBox(
+            height: 100,
+          ),
+          Center(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(100),
+                color: const Color(0xff439180),
+              ),
+              width: 200,
+              height: 200,
+              child: TextButton(
+                onPressed: () async {
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                    behavior: SnackBarBehavior.floating,
+                    margin: EdgeInsets.fromLTRB(90, 0, 90, 30),
+                    duration: Duration(milliseconds: 1500),
+                    content: Text("Importiere Rezepte..."),
+                  ));
+
+                  Directory Path = await getTemporaryDirectory();
+                  Directory? rootPath = await getExternalStorageDirectory();
+                  print(rootPath.toString());
+                  String? path = await FilesystemPicker.open(
+                    title: 'Lade aus dem Ordner',
+                    context: context,
+                    //directory: Path,
+                    rootDirectory: rootPath ?? Path,
+                    fileTileSelectMode: FileTileSelectMode.wholeTile,
+                    allowedExtensions: ['.json'],
+                    fsType: FilesystemType.file,
+                    pickText: 'Lade Rezepte',
+                    folderIconColor: Colors.teal,
+                  );
+                  print(path);
+                  var creation = false;
+                  if (path != null) {
+                    creation = await loadAllSavedMeals(path);
+                  }
+
+                  if (creation) {
+                    var alterdialog = AlertDialog(
+                      title: const Text("Rezepte erfolgreich geladen"),
+                      content:
+                          const Text("Die Rezepte wurden erfolgreich geladen."),
+                      actions: [
+                        TextButton(
+                          child: const Text("OK"),
+                          onPressed: () {
+                            Navigator.pop(context, true);
+                          },
+                        )
+                      ],
+                    );
+                    var dialog = await showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return alterdialog;
+                        });
+                    if (dialog) {
+                      Navigator.pushReplacementNamed(context, "/");
+                    }
+                  } else {
+                    await showAlertDialog(
+                        context, "Fehler", "Es ist ein Fehler aufgetreten");
+                  }
+                },
+                child: const Icon(
+                  Icons.upload,
+                  size: 70,
                 ),
               ),
-            ],
-          )
+            ),
+          ),
+          Expanded(
+              child: SizedBox(
+            height: 500,
+          ))
         ],
       ),
     );
-  }
-
-  getMealCategories(List<String> categories) {
-    List<String> cat = [];
-    for (var i = 0; i < categories.length; i++) {
-      for (var j = 0; j < DUMMY_CATEGORIES.length; j++) {
-        if (categories[i] == DUMMY_CATEGORIES[j].id) {
-          cat.add(DUMMY_CATEGORIES[j].title);
-        }
-      }
-    }
-    return cat;
   }
 }

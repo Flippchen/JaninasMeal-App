@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+1
+version: 1.5.0+6
 
 environment:
   sdk: ">=2.17.5 <3.0.0"
@@ -27,6 +27,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  filesystem_picker: ^3.0.0
   shared_preferences: ^2.0.15
   material_design_icons_flutter: 6.0.7096
   html: ^0.15.1
@@ -59,6 +60,7 @@ flutter:
   assets:
     - assets/meals.json
     - assets/icon.png
+    - assets/stockimage.png
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

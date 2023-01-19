@@ -2,6 +2,9 @@
     package="com.example.meal_app_flutter">
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.STO" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_INTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
    <application
         android:label="Janinas Kochbuch"
         android:name="${applicationName}"

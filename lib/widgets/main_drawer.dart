@@ -38,11 +38,11 @@ class MainDrawer extends StatelessWidget {
               },
               onPressed: () {},
               child: Text(
-                'Erfinde dich neu!',
+                'Essen macht glücklich!',
                 style: TextStyle(
                     fontWeight: FontWeight.w900,
                     fontSize: 30,
-                    color: Theme.of(context).primaryColor),
+                    color: Colors.green),
               ),
             ),
           ),

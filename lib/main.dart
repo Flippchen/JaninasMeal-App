@@ -10,6 +10,7 @@ import 'package:meal_app_flutter/screens/all_meals_screen.dart';
 import 'package:meal_app_flutter/screens/category_meals_screen.dart';
 import 'package:meal_app_flutter/screens/export_screen.dart';
 import 'package:meal_app_flutter/screens/import_screen.dart';
+import 'package:meal_app_flutter/screens/intro_screen.dart';
 import 'package:meal_app_flutter/screens/online_meal_screen.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:meal_app_flutter/screens/category_screen.dart';
@@ -32,6 +33,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  var _isInit = false;
   Map<String, bool> _filters = {
     'gluten': false,
     'lactose': false,
@@ -50,8 +52,9 @@ class _MyAppState extends State<MyApp> {
     var tempmeals = await getAllMeals();
     var tempfavs = await getAllFavouriteMeals();
     var tempfilters = prefs.getStringList("filters");
-    //print(tempfavs.map((e) => e.toJson().toString()));
+    //print(tempfavs.map((e) => e.toJson().toString()))
     setState(() {
+      _isInit = prefs.getBool("isInit") ?? false;
       _availableMeals = tempmeals;
       _favouriteMeals = tempfavs;
       if (tempfilters != null) {
@@ -154,7 +157,8 @@ class _MyAppState extends State<MyApp> {
       ),
       //home: CategoriesScreen(),
       routes: {
-        '/': (context) => TabsScreen(),
+        '/': (context) =>
+            _isInit == true ? TabsScreen() : IntroductionScreens(),
         CategoryMealsScreen.routeName: (context) => CategoryMealsScreen(),
         MealDetailScreen.routeName: (context) => MealDetailScreen(
             toggleFavourite: _toggledFavourite, isFavourite: _isMealFavourite),
@@ -166,7 +170,9 @@ class _MyAppState extends State<MyApp> {
             AddMealsScreen(_availableMeals, ErrorMeal),
         ExportMealScreen.routeName: (context) => ExportMealScreen(),
         ImportMealScreen.routeName: (context) => ImportMealScreen(),
+        IntroductionScreens.routeName: (context) => IntroductionScreens(),
       },
+
       onGenerateRoute: (settings) {
         print(settings.arguments);
         return MaterialPageRoute(builder: (context) => CategoriesScreen());
@@ -373,13 +379,9 @@ loadImage(String id) async {
   return await file.readAsBytes();
 }
 
-// Donnerstag:
-//TODO: Alle Meals sollen leer sein
-// TODO: Bilder auf anderen Pfad speichern
-
 // Near future:
-// FIXME: Bilder als relativer Pfad und hinzufügen Button und Jagdwurst Parser anpassen usw
-// TODO: File Explorer bei inportieren
+// FIXME:Jagdwurst Parser anpassen usw
+// FIXME: Error when opening add meal because of image
 
 // Future
 // TODO: Startbild und Appbild --> Playestore

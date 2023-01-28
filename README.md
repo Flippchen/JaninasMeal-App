@@ -11,3 +11,6 @@ View detailed recipe information including ingredients, instructions, cooking ti
 Save favorite recipes for easy access
 Create, edit, and delete your own recipes
 Add recipes from a weblink from Zuckerbrot&Jagdwurst
+
+## Download
+You can download the app from the Google Play Store [here](https://play.google.com/store/apps/details?id=com.flippchen.janinasmealapp).

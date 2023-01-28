@@ -55,7 +55,7 @@ const DUMMY_CATEGORIES = [
   ),
   Category(
     id: 'c9',
-    title: 'Französisch',
+    title: 'Gemeinsam Kochen',
     color: Colors.limeAccent,
   ),
   Category(

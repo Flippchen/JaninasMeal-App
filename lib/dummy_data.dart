@@ -5,12 +5,12 @@ import 'package:meal_app_flutter/models/meal.dart';
 const DUMMY_CATEGORIES = [
   Category(
     id: 'c2',
-    title: 'Schnell & einfach',
+    title: 'Nudeln',
     color: Colors.deepOrange,
   ),
   Category(
     id: 'c5',
-    title: 'Leicht & lieblich',
+    title: 'Auflauf',
     color: Colors.lightBlue,
   ),
   Category(
@@ -30,17 +30,17 @@ const DUMMY_CATEGORIES = [
   ),
   Category(
     id: 'c10',
-    title: 'Sommerlich',
+    title: 'Salat',
     color: Colors.blueAccent,
   ),
   Category(
     id: 'c3',
-    title: 'Burger',
+    title: 'Backen - herzhaft',
     color: Colors.orange,
   ),
   Category(
     id: 'c4',
-    title: 'Deutsch',
+    title: 'Backen - süß',
     color: Colors.teal,
   ),
   Category(
@@ -50,7 +50,7 @@ const DUMMY_CATEGORIES = [
   ),
   Category(
     id: 'c8',
-    title: 'Asiatisch',
+    title: 'Snacks',
     color: Colors.lightGreen,
   ),
   Category(
@@ -60,7 +60,7 @@ const DUMMY_CATEGORIES = [
   ),
   Category(
     id: 'c13',
-    title: 'Experimentell',
+    title: 'Süßes',
     color: Colors.pinkAccent,
   ),
 ];

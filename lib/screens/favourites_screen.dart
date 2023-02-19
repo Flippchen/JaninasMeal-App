@@ -39,7 +39,7 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
         } else if (snapshot.hasData && snapshot.data.isEmpty) {
           return const Scaffold(
             body: Center(
-              child: Text('Favouriten'),
+              child: Text('Favoriten'),
             ),
           );
         } else {

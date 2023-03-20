@@ -30,7 +30,18 @@ jobs:
 
       - name: Get dependencies
         run: flutter pub get
+      - name: Gradle Wrapper Validation
+        uses: gradle/wrapper-validation-action@v1
 
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
       - name: Build APK
         run: flutter build apk
 

@@ -1,4 +1,4 @@
-# meal_app_flutter
+# recipe_app
 This is a recipe app built using Flutter. The app allows users to manage and view a variety of different recipes.
 
 ## Getting Started

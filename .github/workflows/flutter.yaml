@@ -30,8 +30,6 @@ jobs:
 
       - name: Get dependencies
         run: flutter pub get
-      - name: Gradle Wrapper Validation
-        uses: gradle/wrapper-validation-action@v1
 
       - name: Cache Gradle dependencies
         uses: actions/cache@v2

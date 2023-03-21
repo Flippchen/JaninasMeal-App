@@ -25,6 +25,7 @@ jobs:
 
       - name: Decode Keystore
         run: |
+          mkdir -p android/app/keystore
           echo "$KEYSTORE" | base64 --decode > android/app/keystore/your_keystore.jks
         env:
           KEYSTORE: ${{ secrets.KEYSTORE }}

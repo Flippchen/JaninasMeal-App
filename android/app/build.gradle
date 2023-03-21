@@ -61,7 +61,7 @@ android {
 
     signingConfigs {
         release {
-            def keystoreFilePath = System.getProperty("user.home") + "/work/recipe_app/recipe_app/android/app/keystore/your_keystore.jks"
+            def keystoreFilePath = System.getProperty("user.home") + "/work/JaninasMeal-Appp/JaninasMeal-App/android/app/keystore/your_keystore.jks"
             if (new File(keystoreFilePath).exists()) {
                 storeFile = file(keystoreFilePath)
                 storePassword System.getenv("SIGNING_STORE_PASSWORD")

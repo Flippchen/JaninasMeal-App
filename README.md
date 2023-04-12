@@ -1,6 +1,9 @@
 # JaninasMeal-App 🍽️
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/Flippchen/JaninasMeal-App?style=flat-square) ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/Flippchen/JaninasMeal-App/flutter.yaml?style=flat-square)   ![GitHub language count](https://img.shields.io/github/languages/count/Flippchen/JaninasMeal-App?style=flat-square) ![GitHub repo size](https://img.shields.io/github/repo-size/Flippchen/JaninasMeal-App?style=flat-square)
 
+
+<a href='https://play.google.com/store/apps/details?id=com.flippchen.janinasmealapp&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' height="100"/></a>
+
 Welcome to JaninasMeal-App, a sleek and user-friendly recipe management app built using Flutter. The app empowers you to discover, organize, and create a wide range of delicious recipes with ease.
 
 ## 🌟 Getting Started
